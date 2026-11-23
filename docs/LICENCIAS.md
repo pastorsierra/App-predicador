@@ -6,6 +6,8 @@ Cada recurso integrado fue verificado antes de incluirse. El aviso de licencias 
 |---|---|---|---|
 | Reina-Valera 1909 (con números Strong por palabra) | Dominio público | eBible.org, vía github.com/seven1m/open-bibles (`spa-rv1909.usfx.xml`) | Texto principal, búsqueda, concordancia |
 | La Biblia en Español Sencillo (BES) | CC BY 4.0 — © 2018 AudioBiblia.org / Irma Flores | eBible.org (SPNBES), vía github.com/seven1m/open-bibles | Comparación de traducciones. Atribución mostrada en la app. |
+| Palabra de Dios para ti (PDT) | CC BY-SA 4.0 — © 2017-2022 Asociación Bíblica Latinoamericana | eBible.org (SPAPDT) vía github.com/seven1m/open-bibles | Comparación. Texto sin cambios (solo formato); los versos unidos en la fuente se indican «(incluido en el versículo N)». |
+| Versión Biblia Libre (VBL) | CC BY-SA 4.0 — © 2018-2020 Jonathan Gallagher y Shelly Barrios de Avila | eBible.org (SPNVBL) vía github.com/seven1m/open-bibles | Comparación. Mismo tratamiento. |
 | Referencias cruzadas | CC BY — OpenBible.info | openbible.info/labs/cross-references (copia en github.com/scrollmapper/bible_databases) | Filtradas: votos ≥ 3, máximo 15 por versículo (171.524 enlaces) |
 | Diccionario hebreo de Strong (1894) y griego (1890) | Texto: dominio público. Edición digital JSON: Open Scriptures, CC BY-SA | github.com/openscriptures/strongs | Léxico. Si se redistribuye una versión modificada del léxico, debe conservar la licencia CC BY-SA. |
 

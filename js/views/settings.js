@@ -111,6 +111,32 @@ export async function renderSettings(view) {
       h('button', { class: 'btn', onclick: () => fileIn.click() }, 'Importar respaldo'), fileIn),
     h('p', { class: 'hint' }, 'Importar fusiona: conserva la versión más reciente de cada registro y no borra lo que ya tiene.')));
 
+  // Conexión con el Taller (GitHub, solo lectura)
+  const SY = await import('../taller/sync.js');
+  const own = await SY.ownGithubCfg(); const fromTaller = await SY.tallerGithubCfg();
+  const gMsg = h('p', { class: 'hint', role: 'status' });
+  const lastPull = await (await import('../db.js')).getSetting('githubLastPull');
+  const gOwner = h('input', { type: 'text', value: own?.owner || fromTaller?.owner || 'pastorsierra', 'aria-label': 'Usuario de GitHub', autocapitalize: 'off' });
+  const gRepo = h('input', { type: 'text', value: own?.repo || fromTaller?.repo || 'taller-datos', 'aria-label': 'Repositorio privado', autocapitalize: 'off' });
+  const gTok = h('input', { type: 'password', value: own?.token || '', placeholder: fromTaller ? 'Se usa la clave que ya tiene el Taller en este equipo' : 'github_pat_…', 'aria-label': 'Clave (token) de GitHub', autocomplete: 'off', autocapitalize: 'off' });
+  view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Conexión con el Taller del Predicador'),
+    h('p', {}, 'Al abrir la app se traen solas sus enseñanzas, sus Biblias y la clave del archivo desde el Taller de este equipo y desde su repositorio privado de GitHub. Esta app solo lee: nunca cambia ni borra los datos del Taller.'),
+    h('p', { class: 'hint' }, fromTaller ? `Conexión del Taller encontrada en este equipo (${fromTaller.owner}/${fromTaller.repo}); se usa automáticamente.` : own ? `Conectada a ${own.owner}/${own.repo}.` : 'En este equipo el Taller no tiene la conexión con GitHub. Puede escribirla aquí (la misma clave que usa en el Taller).',
+      lastPull ? ` Última lectura de GitHub: ${new Date(lastPull).toLocaleString('es-CO')}.` : ''),
+    h('div', { class: 'form' }, h('div', { class: 'form-row' }, gOwner, gRepo), gTok),
+    h('div', { class: 'btn-row' },
+      h('button', { class: 'btn primary', onclick: async (e) => {
+        const btn = e.currentTarget; btn.disabled = true; gMsg.textContent = 'Trayendo…';
+        try {
+          if (gTok.value.trim()) await SY.saveGithubCfg({ owner: gOwner.value.trim(), repo: gRepo.value.trim(), token: gTok.value.trim() });
+          const r = await SY.autoSync({ force: true });
+          gMsg.textContent = `Listo: ${r.nuevas} enseñanzas nuevas, ${r.actualizadas} actualizadas${r.biblias.length ? `, Biblias: ${r.biblias.join(', ')}` : ''}${r.clave ? ', archivo abierto' : ''}.${r.errores.length ? ' Aviso: ' + r.errores.join(' ') : ''}`;
+        } catch (err) { gMsg.textContent = err.message; }
+        btn.disabled = false;
+      } }, 'Traer ahora'),
+      own ? h('button', { class: 'btn ghost', onclick: async () => { await SY.saveGithubCfg(null); gTok.value = ''; gMsg.textContent = 'Clave quitada de este equipo.'; } }, 'Quitar la clave de este equipo') : null),
+    gMsg, h('p', { class: 'hint' }, 'La clave se guarda solo en este equipo: no va en los respaldos ni en GitHub.')));
+
   // Enseñanzas: clave del archivo
   const { hasKey, forgetKey } = await import('../taller/store.js');
   const keyInfo = h('p', {}, (await hasKey()) ? 'El archivo cifrado de enseñanzas está abierto en este equipo.' : 'El archivo cifrado de enseñanzas todavía no se ha abierto en este equipo.');

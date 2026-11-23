@@ -28,19 +28,20 @@ async function run(name, device, full) {
     return 'vacía, con guía de importación';
   });
 
-  await t('Traer del Taller en este equipo (mismo sitio)', async () => {
+  await t('Traer del Taller automáticamente al abrir (mismo sitio)', async () => {
     await p.evaluate(async ({ S1, S2, KEY_RAW }) => {
       await new Promise((res, rej) => { const r = indexedDB.open('taller-predicador', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv');
         r.onsuccess = () => { const tx = r.result.transaction('kv', 'readwrite'); const st = tx.objectStore('kv');
           st.put(JSON.stringify([S1, S2]), 'tp_sermones'); st.put(JSON.stringify({ 'Sprueba2': '2026-01-05' }), 'tp_pred'); st.put(KEY_RAW, 'tp_libkey'); st.put(JSON.stringify('editorial'), 'tp_wstyle');
           tx.oncomplete = () => { r.result.close(); res(); }; tx.onerror = () => rej(tx.error); }; r.onerror = () => rej(r.error); });
     }, { S1, S2, KEY_RAW });
-    await p.reload(); await p.waitForSelector('text=Traer del Taller en este equipo');
-    await p.click('text=Traer del Taller en este equipo');
+    await p.reload(); // la app trae sola los datos del Taller al abrir
+    await p.waitForSelector('.toast.show >> text=Traído del Taller');
+    await p.goto(BASE + '#/ensenanzas/mis');
     await p.waitForSelector('.list a strong >> text=PRUEBA Uno');
     const n = await p.locator('.list li a').count();
     if (n !== 2) throw new Error(`${n} enseñanzas`);
-    return `${n} enseñanzas, marcas y clave del archivo traídas`;
+    return `${n} enseñanzas, marcas y clave del archivo traídas sin tocar nada`;
   });
 
   await t('Lector con el diseño del Word', async () => {

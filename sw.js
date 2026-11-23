@@ -1,13 +1,13 @@
 // Service Worker: aplicación disponible sin conexión.
 // - Interfaz (shell): precache versionado; red primero para actualizar, caché si no hay conexión.
 // - Datos bíblicos (data/): caché primero; lo que se consulta queda guardado para uso sin conexión.
-const VERSION = 'v0.3.0';
+const VERSION = 'v0.4.0';
 const SHELL = `escudrinad-shell-${VERSION}`;
 const DATA = 'escudrinad-datos-v1';
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'js/main.js', 'js/books.js', 'js/ref.js', 'js/bible.js', 'js/db.js', 'js/ui.js', 'js/search.js', 'js/study.js', 'js/state.js', 'js/offline.js',
-  'js/views/panel.js', 'js/views/atlas.js', 'js/atlas.js', 'js/bibles.js', 'data/atlas/lugares.json', 'data/atlas/mapa.json', 'js/views/ensenanzas.js', 'js/taller/page.js', 'js/taller/store.js', 'js/taller/wordgen.js', 'js/taller/logo.js', 'css/taller.css', 'vendor/docx.js', 'js/views/home.js', 'js/views/reader.js', 'js/views/verse.js', 'js/views/search.js', 'js/views/studies.js', 'js/views/notebook.js', 'js/views/settings.js',
+  'js/views/panel.js', 'js/views/atlas.js', 'js/atlas.js', 'js/bibles.js', 'js/taller/sync.js', 'data/atlas/lugares.json', 'data/atlas/mapa.json', 'js/views/ensenanzas.js', 'js/taller/page.js', 'js/taller/store.js', 'js/taller/wordgen.js', 'js/taller/logo.js', 'css/taller.css', 'vendor/docx.js', 'js/views/home.js', 'js/views/reader.js', 'js/views/verse.js', 'js/views/search.js', 'js/views/studies.js', 'js/views/notebook.js', 'js/views/settings.js',
   'data/manifest.json', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
 
@@ -33,7 +33,7 @@ self.addEventListener('fetch', (e) => {
     }));
     return;
   }
-  if (/\/data\/(rv1909|bes|xref|strong)\//.test(path)) {
+  if (/\/data\/(rv1909|bes|pdt|vbl|xref|strong)\//.test(path)) {
     e.respondWith(caches.open(DATA).then(async c => {
       const hit = await c.match(e.request.url);
       if (hit) return hit;

@@ -94,6 +94,15 @@ async function start() {
   window.addEventListener('offline', () => { updateOnline(); toast('Sin conexión: se usan los textos descargados'); });
   await route();
   requestPersistence();
+  // Trae solo lo nuevo del Taller (mismo equipo y GitHub), sin pedir nada al usuario
+  import('./taller/sync.js').then(m => m.autoSync()).then(r => {
+    if (!r) return;
+    const parts = [];
+    if (r.nuevas || r.actualizadas) parts.push(`${r.nuevas} enseñanzas nuevas y ${r.actualizadas} actualizadas`);
+    if (r.biblias.length) parts.push(`Biblias: ${r.biblias.join(', ')}`);
+    if (r.clave) parts.push('archivo de enseñanzas abierto');
+    if (parts.length) { toast(`Traído del Taller: ${parts.join(' · ')}`); if ((/^#\/(inicio|ensenanzas)(\/(mis|series|calendario))?$/.test(location.hash) || !location.hash || location.hash === '#/') && !document.querySelector('.modal-wrap')) route(); }
+  }).catch(e => console.warn('Sincronización con el Taller', e));
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     try {
       const hadController = !!navigator.serviceWorker.controller;

@@ -6,6 +6,8 @@ export const DATA_CACHE = 'escudrinad-datos-v1';
 export const PACKS = [
   { id: 'rv1909', name: 'Reina-Valera 1909 (con números Strong)', files: () => BOOKS.map(b => `data/rv1909/${b.id}.json`) },
   { id: 'bes', name: 'Biblia en Español Sencillo', files: () => BOOKS.map(b => `data/bes/${b.id}.json`) },
+  { id: 'pdt', name: 'Palabra de Dios para ti', files: () => BOOKS.map(b => `data/pdt/${b.id}.json`) },
+  { id: 'vbl', name: 'Versión Biblia Libre', files: () => BOOKS.map(b => `data/vbl/${b.id}.json`) },
   { id: 'xref', name: 'Referencias cruzadas', files: () => BOOKS.map(b => `data/xref/${b.id}.json`) },
   { id: 'strong', name: 'Léxico Strong (hebreo y griego)', files: () => ['data/strong/H.json', 'data/strong/G.json'] },
 ];

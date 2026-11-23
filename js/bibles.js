@@ -75,10 +75,17 @@ export function readTallerBibles() {
   });
 }
 
-export async function importFromTaller() {
+export async function importFromTaller({ onlyNew = false } = {}) {
   const found = await readTallerBibles();
   const ok = [];
-  for (const b of found) { try { ok.push((await installBible(parseBibleJSON(b))).abbr); } catch (e) { /* formato no válido */ } }
+  const have = new Set((await listBibles()).map(b => b.abbr));
+  for (const b of found) {
+    try {
+      const parsed = parseBibleJSON(b);
+      if (onlyNew && have.has(parsed.abbr)) continue;
+      ok.push((await installBible(parsed)).abbr);
+    } catch (e) { /* formato no válido */ }
+  }
   return ok;
 }
 

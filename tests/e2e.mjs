@@ -274,7 +274,7 @@ async function run(profile) {
   if (profile.offline) {
     await t('Descargar textos para uso sin conexión', 'Los 4 paquetes quedan completos', async () => {
       await page.goto(BASE + '#/ajustes'); await page.waitForSelector('.pack');
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 10; i++) {
         const btn = page.locator('.pack .btn.primary').first();
         if (!(await btn.count())) break;
         await btn.click();

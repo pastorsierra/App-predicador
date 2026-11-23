@@ -3,7 +3,7 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.3.0 — 23 nov 2026. Enseñanzas del Taller (etapa 1), Mis Biblias (versiones del Taller) y Atlas bíblico.
+- **Versión:** 0.4.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática con el Taller y versiones PDT y VBL.
 - **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
@@ -33,6 +33,12 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 ## Mis Biblias y Atlas (v0.3.0)
 - **Mis Biblias:** usa las Biblias que el usuario cargó en el Taller (p. ej. RVR1960): se traen del Taller en el mismo equipo o se cargan como .json (mismo formato del Taller). Se guardan solo en el dispositivo (almacén `bibles`), no se publican ni van en respaldos. Sirven para leer (versión principal), comparar (todas las versiones en el panel y en paralelo), buscar y en la sección «Texto bíblico» de los estudios.
 - **Atlas:** 1.030 lugares de OpenBible.info (CC BY 4.0) y mapa de Natural Earth (dominio público), tomados del Taller (`data/atlas/`). Mapa sin conexión con zoom y arrastre, búsqueda, ficha con versículos y pestaña «Lugares» en el panel de cada versículo. La fuente no indica el grado de certeza de cada ubicación; la app lo advierte.
+
+## Conexión automática con el Taller (v0.4.0)
+- Al abrir la app se traen solas (solo lectura) las enseñanzas, las Biblias personales y la clave del archivo que el Taller guardó en el mismo navegador, y el archivo `taller-datos.json` del repositorio privado de GitHub usando la conexión que ya tiene el Taller (o una clave escrita en Ajustes). Lectura de GitHub como máximo cada 10 minutos; «Traer ahora» la fuerza.
+- La app nunca escribe en los datos del Taller. Las claves quedan solo en el dispositivo y se excluyen de los respaldos.
+- **La RVR1960 no se puede añadir desde aquí:** el archivo solo existe dentro del Taller en el iPad del usuario (no está en ningún repositorio) y tiene derechos de autor. Llega a la app automáticamente desde el Taller del mismo equipo o cargando el .json.
+- Versiones libres añadidas: Palabra de Dios para ti (PDT) y Versión Biblia Libre (VBL), CC BY-SA 4.0.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |

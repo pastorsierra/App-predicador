@@ -209,3 +209,18 @@ Errores encontrados y corregidos:
 | 11 | En el mapa, los puntos se veían blancos y las etiquetas se encimaban | Grosor de borde proporcional al zoom y etiquetas que no se superponen |
 | 12 | Buscar «betel» no encontraba «Bet-el» | La búsqueda de lugares ignora guiones y espacios |
 | 13 | Pruebas antiguas (no la app): textos y selectores cambiados («Comparar con otra versión», varios campos de archivo en Ajustes) | Pruebas actualizadas |
+
+## Conexión automática con el Taller y versiones PDT/VBL (versión 0.4.0)
+
+Prueba `tests/conexion.mjs` (GitHub simulado; datos ficticios).
+
+**Resultado: 6/6 correctas.** Regresión: 52/52 generales, 35/35 Enseñanzas, 29/29 Biblias y Atlas.
+
+| Función | Resultado | Estado |
+|---|---|---|
+| Traer solo al abrir (Taller en el mismo equipo + GitHub) | Traído del Taller: 2 enseñanzas nuevas y 0 actualizadas · Biblias: AUTO | OK |
+| Biblia del Taller disponible en el selector | RV1909, BES, PDT, VBL, AUTO, Agregar versión… | OK |
+| Versiones libres nuevas (PDT y VBL) en la comparación | RV1909, BES, PDT, VBL y AUTO | OK |
+| Traer ahora desde Ajustes (no duplica) | Listo: 0 enseñanzas nuevas, 0 actualizadas. | OK |
+| Clave escrita aquí se usa y no va en el respaldo | clave propia usada; el respaldo no la contiene | OK |
+| Errores de consola | 0 errores | OK |

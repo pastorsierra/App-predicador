@@ -2,7 +2,7 @@
 // Cada registro lleva: id, createdAt, updatedAt, deletedAt (borrado lógico) — listo para sincronizar en la Fase de nube.
 const DB_NAME = 'escudrinad';
 const DB_VERSION = 3;
-export const SECRET_SETTINGS = ['tallerLibKey'];
+export const SECRET_SETTINGS = ['tallerLibKey', 'githubTaller'];
 export const STORES = ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'history', 'settings', 'sermons'];
 
 let dbp = null;

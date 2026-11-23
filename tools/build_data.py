@@ -58,11 +58,17 @@ def parse_usfx(path, keep_strong):
     segs = None
     stack = []  # pila de etiquetas abiertas relevantes: ('w', strong) | ('add',) | ('skip',)
 
+    vend = None  # versos unidos en la fuente ("9-20"): el texto va en el primero y los demás lo indican
+
     def flush():
-        nonlocal segs
+        nonlocal segs, vend
         if book and chap and verse and segs is not None:
             books[book]["c"][chap - 1].append(finish(segs))
+            if vend:
+                for x in range(verse + 1, vend + 1):
+                    books[book]["c"][chap - 1].append("(incluido en el versículo %d)" % verse)
         segs = None
+        vend = None
 
     def emit(t):
         if segs is None:
@@ -101,13 +107,15 @@ def parse_usfx(path, keep_strong):
                 verse = None
             elif tag == "v" and selfclose:
                 flush()
-                verse = int(attrs["id"])
+                mm = re.match(r"^(\d+)(?:-(\d+))?", attrs["id"])
+                verse = int(mm.group(1))
                 expected = len(books[book]["c"][chap - 1]) + 1
                 # Rellena huecos para que el índice del arreglo sea el número de verso
                 while expected < verse:
                     books[book]["c"][chap - 1].append("")
                     expected += 1
                 segs = []
+                vend = int(mm.group(2)) if mm.group(2) else None
             elif tag == "ve" and selfclose:
                 flush()
             elif tag == "w":

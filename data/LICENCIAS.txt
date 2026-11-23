@@ -17,3 +17,10 @@ strong/  Diccionario hebreo (1894) y griego (1890) de James Strong: dominio púb
          Edición digital JSON de Open Scriptures (https://github.com/openscriptures/strongs), CC BY-SA.
          Cambios: reorganizado en listas y añadida la frecuencia de cada número en la RV1909.
          Esta carpeta se distribuye bajo la misma licencia CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
+
+pdt/     Palabra de Dios para ti. © 2017-2022 Asociación Bíblica Latinoamericana. CC BY-SA 4.0
+         https://creativecommons.org/licenses/by-sa/4.0/ — Fuente: https://ebible.org/details.php?id=SPAPDT
+         Cambios: solo conversión de formato; los versos unidos en la fuente se indican «(incluido en el versículo N)».
+vbl/     Versión Biblia Libre. © 2018-2020 Jonathan Gallagher y Shelly Barrios de Avila. CC BY-SA 4.0
+         Fuente: https://ebible.org/details.php?id=SPNVBL — Mismos cambios de formato.
+atlas/   Lugares de OpenBible.info (CC BY 4.0) y mapa de Natural Earth (dominio público).
