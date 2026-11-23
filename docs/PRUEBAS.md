@@ -163,3 +163,49 @@ Errores encontrados y corregidos en esta etapa:
 | 8 | «Traer del Taller» fallaba: se perdía la referencia al botón después de esperar | Se guarda la referencia antes de esperar |
 | 9 | El botón de tema/diseño activo no se marcaba bien (también existía en Ajustes y en el lector) | Misma corrección en los tres lugares |
 | 10 | Las descargas podían perder su nombre («download») | El enlace se retira tras unos segundos y los nombres de archivo van sin tildes |
+
+## Mis Biblias y Atlas bíblico (versión 0.3.0, 23 nov 2026)
+
+Prueba automática `tests/biblias-atlas.mjs` (Biblias ficticias con la misma estructura que las del Taller).
+
+**Resultado: 29/29 correctas.** Regresión: 52/52 generales, 35/35 de Enseñanzas y 7/7 de actualización.
+
+| Función | Resultado | Estado |
+|---|---|---|
+| [iPad] Cargar Biblia personal (.json) | PRUEBA cargada (31.087 versículos) | OK |
+| [iPad] Traer Biblias del Taller (mismo equipo) | SEGUNDA traída del Taller | OK |
+| [iPad] Usar como versión principal en el lector | Juan 3:16 en PRUEBA | OK |
+| [iPad] Cambiar de versión desde el lector | RV1909 ↔ SEGUNDA | OK |
+| [iPad] Comparar todas las versiones en el versículo | 4 versiones lado a lado | OK |
+| [iPad] Lectura en paralelo con otra versión | SEGUNDA DE PRUEBA / REINA-VALERA 1909 | OK |
+| [iPad] Buscar en una Biblia personal | 879 versículos en la PRUEBA | OK |
+| [iPad] El estudio incluye las Biblias personales | RV1909, BES, PRUEBA y SEGUNDA en «Texto bíblico» | OK |
+| [iPad] Las Biblias personales no van en el respaldo | respaldo de 2 KB sin Biblias | OK |
+| [iPad] Quitar una Biblia personal | quitada; el lector volvió a la RV1909 | OK |
+| [iPad] Atlas: mapa y búsqueda | 220 lugares visibles en Tierra Santa; búsqueda «betel» encuentra Bet-el, con sus versículos | OK |
+| [iPad] Atlas: zoom y vista general | acercar y ver todo funcionan | OK |
+| [iPad] Lugares desde el versículo (Génesis 28:19) | Bet-el aparece y abre el mapa | OK |
+| [iPad] Atlas y Biblia personal sin conexión | el atlas y la Biblia personal funcionan sin internet | OK |
+| [iPad] Errores de consola | 0 errores | OK |
+| [iPhone] Cargar Biblia personal (.json) | PRUEBA cargada (31.087 versículos) | OK |
+| [iPhone] Traer Biblias del Taller (mismo equipo) | SEGUNDA traída del Taller | OK |
+| [iPhone] Usar como versión principal en el lector | Juan 3:16 en PRUEBA | OK |
+| [iPhone] Cambiar de versión desde el lector | RV1909 ↔ SEGUNDA | OK |
+| [iPhone] Comparar todas las versiones en el versículo | 4 versiones lado a lado | OK |
+| [iPhone] Lectura en paralelo con otra versión | SEGUNDA DE PRUEBA / REINA-VALERA 1909 | OK |
+| [iPhone] Buscar en una Biblia personal | 879 versículos en la PRUEBA | OK |
+| [iPhone] El estudio incluye las Biblias personales | RV1909, BES, PRUEBA y SEGUNDA en «Texto bíblico» | OK |
+| [iPhone] Las Biblias personales no van en el respaldo | respaldo de 2 KB sin Biblias | OK |
+| [iPhone] Quitar una Biblia personal | quitada; el lector volvió a la RV1909 | OK |
+| [iPhone] Atlas: mapa y búsqueda | 220 lugares visibles en Tierra Santa; búsqueda «betel» encuentra Bet-el, con sus versículos | OK |
+| [iPhone] Atlas: zoom y vista general | acercar y ver todo funcionan | OK |
+| [iPhone] Lugares desde el versículo (Génesis 28:19) | Bet-el aparece y abre el mapa | OK |
+| [iPhone] Errores de consola | 0 errores | OK |
+
+Errores encontrados y corregidos:
+
+| # | Error | Corrección |
+|---|---|---|
+| 11 | En el mapa, los puntos se veían blancos y las etiquetas se encimaban | Grosor de borde proporcional al zoom y etiquetas que no se superponen |
+| 12 | Buscar «betel» no encontraba «Bet-el» | La búsqueda de lugares ignora guiones y espacios |
+| 13 | Pruebas antiguas (no la app): textos y selectores cambiados («Comparar con otra versión», varios campos de archivo en Ajustes) | Pruebas actualizadas |

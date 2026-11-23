@@ -167,7 +167,7 @@ async function run(profile) {
     await page.keyboard.press('Escape');
     await page.goto(BASE + '#/biblia/JHN/1'); await page.waitForSelector('#v1');
     await page.click('button[aria-label="Opciones de lectura"]'); await page.waitForSelector('.modal .switch-row');
-    await page.locator('.modal .switch-row', { hasText: 'Comparar con BES' }).locator('input').check();
+    await page.locator('.modal .switch-row', { hasText: 'Comparar con otra versión' }).locator('input').check();
     await page.waitForSelector('.par-row');
     await page.locator('.modal .switch-row', { hasText: 'Números Strong' }).locator('input').check();
     await page.waitForSelector('.sw .sn');
@@ -178,7 +178,7 @@ async function run(profile) {
     await page.screenshot({ path: `${SHOTS}${P}-paralelo-oscuro.png` });
     // volver a valores normales
     await page.click('button[aria-label="Opciones de lectura"]');
-    await page.locator('.modal .switch-row', { hasText: 'Comparar con BES' }).locator('input').uncheck();
+    await page.locator('.modal .switch-row', { hasText: 'Comparar con otra versión' }).locator('input').uncheck();
     await page.locator('.modal .switch-row', { hasText: 'Números Strong' }).locator('input').uncheck();
     await page.locator('.modal .seg button', { hasText: 'Claro' }).click();
     await page.keyboard.press('Escape');
@@ -265,7 +265,7 @@ async function run(profile) {
     const p = await dl.path(); const data = JSON.parse(fs.readFileSync(p, 'utf8'));
     if (data.app !== 'escudrinad' || !data.stores.notes.length || !data.stores.studies.length) throw new Error('respaldo incompleto');
     if (!dl.suggestedFilename().endsWith('.json')) throw new Error('nombre de archivo perdido: ' + dl.suggestedFilename());
-    await page.setInputFiles('input[type=file]', p);
+    await page.locator('section', { hasText: 'Respaldo y recuperación' }).locator('input[type=file]').setInputFiles(p);
     await page.waitForSelector('.toast.show >> text=importado');
     const msg = await page.locator('.toast').innerText();
     return `${dl.suggestedFilename()} · ${msg}`;

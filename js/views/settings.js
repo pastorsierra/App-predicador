@@ -17,6 +17,43 @@ export async function renderSettings(view) {
     h('div', { class: 'opt-row' }, h('span', {}, 'Apariencia'), themes),
     h('div', { class: 'opt-row' }, h('span', {}, 'Tamaño de letra'), size, sizeVal), preview));
 
+  // Mis Biblias (versiones personales, p. ej. las que cargó en el Taller)
+  const B = await import('../bibles.js');
+  const { clearVersionCache } = await import('../bible.js');
+  const bList = h('div', { class: 'packs' });
+  const bMsg = h('p', { class: 'hint', role: 'status' });
+  const drawBibles = async () => {
+    clear(bList);
+    const list = await B.listBibles();
+    if (!list.length) bList.append(h('p', { class: 'hint' }, 'Todavía no hay Biblias personales en este equipo.'));
+    for (const b of list) bList.append(h('div', { class: 'pack' },
+      h('div', {}, h('strong', {}, `${b.abbr} — ${b.name}`), h('small', { class: 'hint', style: { display: 'block' } }, `${b.verses.toLocaleString('es-CO')} versículos`)),
+      h('button', { class: `btn small ${S.version === b.code ? 'ghost' : ''}`, disabled: S.version === b.code, onclick: async () => { await setPref('version', b.code); toast(`${b.abbr} es ahora la versión principal`); drawBibles(); } }, S.version === b.code ? 'Principal' : 'Usar como principal'),
+      h('button', { class: 'btn small ghost danger', onclick: async () => {
+        if (!(await confirmDialog('Quitar Biblia', `¿Quitar ${b.abbr} de este equipo? Puede volver a cargarla después.`, 'Quitar'))) return;
+        await B.removeBible(b.abbr); clearVersionCache(b.code); if (S.version === b.code) await setPref('version', 'rv1909'); if (S.parallelVer === b.code) await setPref('parallelVer', 'bes'); drawBibles();
+      } }, 'Quitar')));
+  };
+  const bFile = h('input', { type: 'file', accept: '.json,application/json', multiple: true, hidden: true, onchange: async (e) => {
+    const files = [...e.target.files]; e.target.value = ''; const ok = [], bad = [];
+    for (const f of files) { try { bMsg.textContent = `Cargando ${f.name}…`; ok.push((await B.installBible(B.parseBibleJSON(JSON.parse(await f.text()), f.name))).abbr); } catch (err) { bad.push(f.name); } }
+    bMsg.textContent = (ok.length ? `Cargadas: ${ok.join(', ')}.` : '') + (bad.length ? ` No se pudo leer: ${bad.join(', ')} (no tiene el formato de Biblia de 66 libros).` : '');
+    ok.forEach(a => clearVersionCache(`u:${a}`)); drawBibles();
+  } });
+  view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Mis Biblias'),
+    h('p', {}, 'Use aquí las mismas Biblias que cargó en el Taller del Predicador (por ejemplo, la Reina-Valera 1960) para leer, comparar, buscar y estudiar. Se guardan solo en este equipo: no se publican, no van en los respaldos ni en GitHub, porque varias versiones tienen derechos de autor.'),
+    bList,
+    h('div', { class: 'btn-row' },
+      h('button', { class: 'btn primary', onclick: async (e) => {
+        const btn = e.currentTarget; btn.disabled = true; bMsg.textContent = 'Buscando las Biblias del Taller en este equipo…';
+        const ok = await B.importFromTaller(); btn.disabled = false;
+        bMsg.textContent = ok.length ? `Traídas del Taller: ${ok.join(', ')}.` : 'No se encontraron Biblias del Taller en este navegador. Abra esta app en el mismo lugar donde usa el Taller (Safari o pantalla de inicio), o cargue el archivo .json.';
+        ok.forEach(a => clearVersionCache(`u:${a}`)); drawBibles();
+      } }, 'Traer del Taller en este equipo'),
+      h('button', { class: 'btn', onclick: () => bFile.click() }, 'Cargar archivo (.json)'), bFile),
+    bMsg));
+  drawBibles();
+
   // Perfil doctrinal
   const notes = h('textarea', { rows: 5, placeholder: 'Marco doctrinal personal: convicciones, énfasis y criterios que el asistente debe respetar al investigar (se usará en la Fase 4).', 'aria-label': 'Marco doctrinal personal' });
   notes.value = S.doctrinalNotes || '';

@@ -3,7 +3,7 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.2.0 — 23 nov 2026. Incluye la etapa 1 de la unión con el Taller del Predicador (Enseñanzas).
+- **Versión:** 0.3.0 — 23 nov 2026. Enseñanzas del Taller (etapa 1), Mis Biblias (versiones del Taller) y Atlas bíblico.
 - **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
@@ -26,6 +26,13 @@ Notas técnicas de la etapa 1:
 - El archivo cifrado se lee del Taller publicado (`../Assj/biblioteca.enc`, mismo sitio). **Antes de retirar o volver privado el repositorio `Assj`, hay que copiar `biblioteca.enc` y `biblioteca-nueva.enc` a este repositorio** y cambiar `ARCHIVE_URLS` en `js/taller/store.js`.
 - El diseño de página, el generador de Word (`js/taller/wordgen.js`), el logo y `vendor/docx.js` se tomaron del Taller sin cambios de formato.
 - La clave del archivo se guarda solo en el dispositivo (`tallerLibKey`), se excluye de los respaldos y nunca se sube a GitHub.
+
+## Indicación del usuario (23 nov 2026, 5:26 p. m.)
+La app nueva **no debe ser una copia del Taller**: debe seguir el plan original (plataforma de estudio con módulos propios y su propio diseño), aprovechando los datos del Taller. Por eso, las etapas siguientes construyen los módulos del plan (doctrinas, exégesis, hermenéutica, taller del predicador propio, personajes, cronología, biblioteca, IA) con diseño nuevo, reutilizando contenido y datos del Taller, no sus pantallas.
+
+## Mis Biblias y Atlas (v0.3.0)
+- **Mis Biblias:** usa las Biblias que el usuario cargó en el Taller (p. ej. RVR1960): se traen del Taller en el mismo equipo o se cargan como .json (mismo formato del Taller). Se guardan solo en el dispositivo (almacén `bibles`), no se publican ni van en respaldos. Sirven para leer (versión principal), comparar (todas las versiones en el panel y en paralelo), buscar y en la sección «Texto bíblico» de los estudios.
+- **Atlas:** 1.030 lugares de OpenBible.info (CC BY 4.0) y mapa de Natural Earth (dominio público), tomados del Taller (`data/atlas/`). Mapa sin conexión con zoom y arrastre, búsqueda, ficha con versículos y pestaña «Lugares» en el panel de cada versículo. La fuente no indica el grado de certeza de cada ubicación; la app lo advierte.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |

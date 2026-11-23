@@ -39,7 +39,7 @@ const P = {
   plus: 'M12 5v14M5 12h14', trash: 'M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14',
   layers: 'M12 3 2 8l10 5 10-5zM2 13l10 5 10-5', words: 'M4 6h16M4 12h10M4 18h7M17 15l3 3-3 3',
   download: 'M12 3v12M7 10l5 5 5-5M5 21h14', print: 'M7 9V3h10v6M7 18H4v-8h16v8h-3M7 14h10v7H7z',
-  check: 'M5 12l5 5 9-10', type: 'M5 6V4h14v2M12 4v16M9 20h6', moon: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
+  check: 'M5 12l5 5 9-10', map: 'M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14', type: 'M5 6V4h14v2M12 4v16M9 20h6', moon: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z',
 };
 export function icon(name, size = 20) {
   return h('svg', { class: 'icon', viewBox: '0 0 24 24', width: size, height: size, 'aria-hidden': 'true', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },

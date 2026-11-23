@@ -22,3 +22,10 @@ Cada recurso integrado fue verificado antes de incluirse. El aviso de licencias 
 ## Material del Taller del Predicador
 - Las enseñanzas, el diseño de página, el generador de Word y el logo de la IPUC provienen de la app del propio usuario (Taller del Predicador). Las enseñanzas se publican solo cifradas.
 - `vendor/docx.js`: biblioteca «docx» (licencia MIT), copiada del Taller para generar archivos de Word.
+
+## Atlas
+- `data/atlas/lugares.json`: lugares bíblicos de OpenBible.info (CC BY 4.0), con nombres en español, tomados del Taller del Predicador.
+- `data/atlas/mapa.json`: contornos de Natural Earth (dominio público).
+
+## Biblias personales
+Las versiones que el usuario carga (por ejemplo, la Reina-Valera 1960) **no forman parte del repositorio**: quedan solo en su dispositivo para uso personal, como en el Taller. Varias tienen derechos de autor y no deben publicarse.

@@ -2,12 +2,16 @@ import { h, clear, icon, fmtDate } from '../ui.js';
 import { BOOKS, BOOK } from '../books.js';
 import { parseRef, refToKey, label } from '../ref.js';
 import { searchText, concordance, parseQuery, searchUserData } from '../search.js';
-import { strongEntry } from '../bible.js';
+import { strongEntry, allVersions, verLabel } from '../bible.js';
+import { S } from '../state.js';
 import { hrefFor, strongPanel } from './verse.js';
 
 export async function renderSearch(view, params) {
   const q0 = params.get('q') || '';
   const scope0 = params.get('en') || 'all';
+  const vers = await allVersions();
+  const ver0 = vers.some(x => x.code === params.get('v')) ? params.get('v') : (vers.some(x => x.code === S.version) ? S.version : 'rv1909');
+  const verSel = h('select', { 'aria-label': 'Versión' }, vers.map(x => h('option', { value: x.code, selected: x.code === ver0 }, x.abbr)));
   const q = h('input', { type: 'search', value: q0, placeholder: 'Ej.: Hch 2:38 · gracia fe · "nombre de Jesucristo" · G3686', 'aria-label': 'Buscar', enterkeyhint: 'search' });
   const scope = h('select', { 'aria-label': 'Ámbito' },
     h('option', { value: 'all' }, 'Toda la Biblia'), h('option', { value: 'AT' }, 'Antiguo Testamento'), h('option', { value: 'NT' }, 'Nuevo Testamento'),
@@ -15,8 +19,8 @@ export async function renderSearch(view, params) {
   scope.value = scope0;
   const form = h('form', { class: 'search-bar', onsubmit: (e) => {
     e.preventDefault();
-    location.hash = `#/buscar?q=${encodeURIComponent(q.value.trim())}&en=${scope.value}`;
-  } }, icon('search'), q, scope, h('button', { class: 'btn primary', type: 'submit' }, 'Buscar'));
+    location.hash = `#/buscar?q=${encodeURIComponent(q.value.trim())}&en=${scope.value}&v=${encodeURIComponent(verSel.value)}`;
+  } }, icon('search'), q, scope, verSel, h('button', { class: 'btn primary', type: 'submit' }, 'Buscar'));
   const out = h('div', { class: 'search-out' });
   view.append(h('header', { class: 'page-head' }, h('h1', {}, 'Buscar')), form, out);
 
@@ -57,7 +61,7 @@ export async function renderSearch(view, params) {
           h('ul', { class: 'chip-list' }, res.renderings.map(([w, n]) => h('li', {}, h('span', { class: 'chip static' }, `${w} `, h('b', {}, n)))))) : null));
       out.append(byBookBar(res.byBook), results(res.results, res.total));
     } else {
-      const [res, mine] = await Promise.all([searchText('rv1909', q0, { scope: scope0, onProgress }), searchUserData(q0)]);
+      const [res, mine] = await Promise.all([searchText(ver0, q0, { scope: scope0, onProgress }), searchUserData(q0)]);
       progress.remove();
       if (mine.notes.length || mine.studies.length || mine.sermons.length) {
         out.append(h('section', { class: 'mine' }, h('h2', {}, 'En sus datos'),
@@ -66,7 +70,7 @@ export async function renderSearch(view, params) {
             mine.studies.map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, `Estudio: ${s.title}`), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))),
             mine.notes.map(n => h('li', {}, h('a', { href: n.ref ? hrefFor(n.ref) : '#/cuaderno/notas' }, h('strong', {}, `Nota: ${n.title || n.refLabel || 'sin título'}`), h('span', {}, (n.body || '').slice(0, 120))))))));
       }
-      out.append(h('h2', { class: 'res-count' }, `${res.total} versículo${res.total === 1 ? '' : 's'} en la RV1909`));
+      out.append(h('h2', { class: 'res-count' }, `${res.total} versículo${res.total === 1 ? '' : 's'} en la ${verLabel(ver0)}`));
       if (!res.total) out.append(h('p', { class: 'hint' }, 'Sin resultados. Pruebe con menos palabras o revise la ortografía (la RV1909 usa formas antiguas como «fué», «á», «crió»; las tildes se ignoran).'));
       out.append(byBookBar(res.byBook), results(res.results, res.total));
     }

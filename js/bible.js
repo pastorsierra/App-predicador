@@ -1,6 +1,7 @@
 // Acceso a los textos bíblicos (archivos JSON estáticos por libro, cacheados por el Service Worker).
 // Formato de verso: string, o arreglo de segmentos: "texto" | ["texto","G25 G26"] | ["texto","H430",1] (1 = añadido/cursiva).
-import { BOOKS } from './books.js';
+import { BOOKS, BOOK } from './books.js';
+import { userBook, listBibles } from './bibles.js';
 
 let MANIFEST = null;
 const cache = new Map(); // `${ver}/${book}` -> Promise<book>
@@ -19,6 +20,10 @@ export const verseCount = (book, ch) => MANIFEST.versions.rv1909.chapters[book][
 
 export function loadBook(ver, book) {
   const k = `${ver}/${book}`;
+  if (!cache.has(k) && ver.startsWith('u:')) {
+    const p = userBook(ver.slice(2), BOOK[book].index, book).catch(e => { cache.delete(k); throw e; });
+    cache.set(k, p);
+  }
   if (!cache.has(k)) {
     const p = fetch(`data/${ver}/${book}.json`).then(r => {
       if (!r.ok) throw new Error(`No se pudo cargar ${book} (${ver}).`);
@@ -107,3 +112,15 @@ export async function strongEntry(num) {
   const [lemma, xlit, pron, deriv, def, kjv, freq] = e;
   return { num, lemma, xlit, pron, deriv, def: (def || '').trim(), kjv: (kjv || '').trim(), freq: freq || 0 };
 }
+
+// Todas las versiones disponibles: las incluidas en la app y las Biblias personales del usuario
+export async function allVersions() {
+  const own = Object.entries(MANIFEST.versions).map(([code, m]) => ({ code, abbr: m.short, name: m.name, own: false, strong: !!m.strong }));
+  const user = (await listBibles()).map(b => ({ code: b.code, abbr: b.abbr, name: b.name, own: true, strong: false }));
+  return [...own, ...user];
+}
+export function verLabel(code) {
+  if (code && code.startsWith('u:')) return code.slice(2);
+  return MANIFEST.versions[code]?.short || code;
+}
+export function clearVersionCache(code) { for (const k of [...cache.keys()]) if (!code || k.startsWith(code + '/')) cache.delete(k); }

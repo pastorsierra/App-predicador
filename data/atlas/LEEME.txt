@@ -1,0 +1,4 @@
+lugares.json  Lugares bíblicos de OpenBible.info (CC BY 4.0, https://www.openbible.info/geo/), con nombres en español,
+              tomados del Taller del Predicador. Campos: n nombre, e nombre en inglés, t tipo, x longitud, y latitud,
+              v versículos (índice de libro desde 0 . capítulo . versículo; lista recortada a 80), k total de menciones.
+mapa.json     Contornos de tierra, lagos y ríos de Natural Earth (dominio público), proyectados para el mapa del Taller.

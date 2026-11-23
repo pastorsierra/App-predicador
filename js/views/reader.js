@@ -1,7 +1,7 @@
 // Lector bíblico
 import { h, clear, icon, modal, toast } from '../ui.js';
 import { BOOKS, BOOK } from '../books.js';
-import { getChapter, segments, chapterCount } from '../bible.js';
+import { getChapter, segments, chapterCount, allVersions, verLabel, manifest } from '../bible.js';
 import { ckey, vkey, label } from '../ref.js';
 import { byIndex, touchHistory, put } from '../db.js';
 import { S, setPref } from '../state.js';
@@ -26,6 +26,13 @@ export async function renderReader(view, book, ch, vParam) {
     h('button', { class: 'icon-btn', 'aria-label': 'Marcar este capítulo', title: 'Marcar este capítulo', onclick: async () => { await put('bookmarks', { ref: ckey(book, ch), chap: ckey(book, ch), refLabel: `${BOOK[book].name} ${ch}`, title: '' }); toast('Capítulo marcado'); } }, icon('bookmark')),
     h('button', { class: 'icon-btn', 'aria-label': 'Opciones de lectura', title: 'Opciones de lectura', onclick: () => readingOptions(() => draw()) }, icon('type')));
 
+  const versions = await allVersions();
+  const verName = (code) => (versions.find(x => x.code === code) || { name: verLabel(code) }).name;
+  const verSel = h('select', { class: 'ver-select', 'aria-label': 'Versión de la Biblia', onchange: async (e) => {
+    if (e.target.value === '__add') { e.target.value = mainVer; location.hash = '#/ajustes'; return; }
+    await setPref('version', e.target.value); draw();
+  } }, versions.map(x => h('option', { value: x.code }, x.abbr)), h('option', { value: '__add' }, 'Agregar versión…'));
+  head.insertBefore(verSel, head.querySelector('.spacer'));
   const article = h('article', { class: 'reader', lang: 'es' });
   const foot = h('footer', { class: 'reader-foot' });
   view.append(head, article, foot);
@@ -49,17 +56,21 @@ export async function renderReader(view, book, ch, vParam) {
     }
   }
 
-  let rv = [], bes = null;
+  let rv = [], bes = null, mainVer = S.version || 'rv1909', parVer = 'bes';
   async function draw() {
     article.className = `reader ${S.verseBreaks ? 'breaks' : 'flow'} ${S.parallel ? 'parallel' : ''} ${S.showStrong ? 'strong-on' : ''}`;
-    rv = await getChapter('rv1909', book, ch);
+    mainVer = S.version || 'rv1909';
+    try { rv = await getChapter(mainVer, book, ch); }
+    catch (e) { toast(`${verLabel(mainVer)} no está disponible; se muestra la RV1909`); mainVer = 'rv1909'; rv = await getChapter('rv1909', book, ch); }
+    verSel.value = mainVer;
+    parVer = S.parallelVer && S.parallelVer !== mainVer ? S.parallelVer : (mainVer === 'bes' ? 'rv1909' : 'bes');
     bes = null;
-    if (S.parallel) { try { bes = await getChapter('bes', book, ch); } catch (e) { bes = null; toast('BES no disponible sin conexión'); } }
+    if (S.parallel) { try { bes = await getChapter(parVer, book, ch); } catch (e) { bes = null; toast(`${verLabel(parVer)} no disponible sin conexión`); } }
     await loadDecor();
     clear(article);
     article.append(h('h1', { class: 'chapter-title' }, h('span', { class: 'ct-book' }, BOOK[book].name), h('span', { class: 'ct-ch' }, `Capítulo ${ch}`)));
     if (decor.chapNotes) article.append(h('a', { class: 'chap-notes', href: `#/cuaderno/notas?chap=${ckey(book, ch)}` }, `${decor.chapNotes} nota${decor.chapNotes > 1 ? 's' : ''} de este capítulo`));
-    if (S.parallel) article.append(h('div', { class: 'par-head' }, h('span', {}, 'Reina-Valera 1909'), h('span', {}, 'Biblia en Español Sencillo')));
+    if (S.parallel) article.append(h('div', { class: 'par-head' }, h('span', {}, verName(mainVer)), h('span', {}, verName(parVer))));
     const body = h('div', { class: 'verses' });
     rv.forEach((verse, i) => {
       const v = i + 1, key = vkey(book, ch, v);
@@ -67,10 +78,10 @@ export async function renderReader(view, book, ch, vParam) {
         h('sup', { class: 'vn' }, v), ...renderSegs(verse), decor.notes.has(key) ? h('span', { class: 'note-dot', title: 'Tiene nota' }) : null);
       el.addEventListener('click', (e) => onVerseTap(e, v));
       el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onVerseTap(e, v); } });
-      if (S.parallel) body.append(h('div', { class: 'par-row' }, el, h('span', { class: 'par-bes' }, h('sup', { class: 'vn' }, v), bes ? (bes[i] || '') : '—')));
+      if (S.parallel) body.append(h('div', { class: 'par-row' }, el, h('span', { class: 'par-bes' }, h('sup', { class: 'vn' }, v), bes ? plainV(bes[i]) : '—')));
       else { body.append(el); if (!S.verseBreaks) body.append(' '); }
     });
-    article.append(body, h('p', { class: 'reader-source' }, 'Reina-Valera 1909 · Dominio público'));
+    article.append(body, h('p', { class: 'reader-source' }, sourceLine(mainVer)));
     drawFoot();
   }
 
@@ -163,7 +174,10 @@ function pickBook(current) {
   modal({ title: 'Ir a', content: grid, wide: true });
 }
 
-function readingOptions(redraw) {
+async function readingOptions(redraw) {
+  const vs = await allVersions();
+  const parSel = h('select', { 'aria-label': 'Versión para comparar', onchange: async (e) => { await setPref('parallelVer', e.target.value); redraw(); } },
+    vs.map(x => h('option', { value: x.code, selected: x.code === (S.parallelVer || 'bes') }, `${x.abbr} — ${x.name}`)));
   const size = h('input', { type: 'range', min: 14, max: 30, step: 1, value: S.fontSize, 'aria-label': 'Tamaño de letra', oninput: async (e) => { await setPref('fontSize', +e.target.value); sizeVal.textContent = `${e.target.value} px`; } });
   const sizeVal = h('span', { class: 'val' }, `${S.fontSize} px`);
   const toggle = (k, name, desc) => h('label', { class: 'switch-row' },
@@ -175,6 +189,14 @@ function readingOptions(redraw) {
     h('div', { class: 'opt-row' }, h('span', {}, 'Tamaño de letra'), size, sizeVal),
     h('div', { class: 'opt-row' }, h('span', {}, 'Apariencia'), themes),
     toggle('verseBreaks', 'Un versículo por línea', 'Desactívelo para lectura continua en párrafo.'),
-    toggle('parallel', 'Comparar con BES', 'Muestra la Biblia en Español Sencillo al lado.'),
+    toggle('parallel', 'Comparar con otra versión', 'Muestra otra versión al lado.'),
+    h('div', { class: 'opt-row' }, h('span', {}, 'Versión para comparar'), parSel),
     toggle('showStrong', 'Números Strong', 'Muestra el número hebreo/griego de cada palabra. Toque el número para abrir el léxico.')) });
+}
+
+function plainV(v) { return v == null ? '' : typeof v === 'string' ? v : v.map(s => (typeof s === 'string' ? s : s[0])).join(''); }
+function sourceLine(code) {
+  if (code.startsWith('u:')) return `${code.slice(2)} · Biblia personal guardada solo en este equipo`;
+  const m = manifest().versions[code];
+  return m ? `${m.name} · ${m.license}` : code;
 }

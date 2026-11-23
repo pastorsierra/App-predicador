@@ -9,6 +9,7 @@ import { renderSearch } from './views/search.js';
 import { renderStudies, renderStudy } from './views/studies.js';
 import { renderNotebook } from './views/notebook.js';
 import { renderSettings } from './views/settings.js';
+import { renderAtlas } from './views/atlas.js';
 import { renderEnsenanzas, renderEnsenanza, renderArchivoItem, renderEditor } from './views/ensenanzas.js';
 
 const NAV = [
@@ -18,6 +19,7 @@ const NAV = [
   ['estudios', 'Estudios', 'study'],
   ['buscar', 'Buscar', 'search'],
   ['cuaderno', 'Cuaderno', 'notebook'],
+  ['atlas', 'Atlas', 'map'],
   ['ajustes', 'Ajustes', 'settings'],
 ];
 
@@ -27,7 +29,7 @@ function buildNav() {
   clear(nav); clear(tab);
   for (const [id, name, ic] of NAV) {
     nav.append(h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, icon(ic), h('span', {}, name))));
-    if (id !== 'ajustes') tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
+    if (id !== 'ajustes' && id !== 'atlas') tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
   }
   updateOnline();
 }
@@ -65,6 +67,7 @@ async function route() {
       case 'ensenanzas': await renderEnsenanzas(view, parts[1] || 'mis'); break;
       case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
       case 'archivo': await renderArchivoItem(view, parts[1]); break;
+      case 'atlas': await renderAtlas(view, parts[1]); break;
       case 'ajustes': await renderSettings(view); break;
       default: view.append(h('div', { class: 'empty' }, 'Página no encontrada.'));
     }

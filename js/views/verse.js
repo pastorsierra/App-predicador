@@ -1,7 +1,8 @@
 // Panel contextual de versículo(s): acciones, palabras originales, referencias, comparación y notas.
 import { h, clear, icon, toast, modal, copyText, fmtDate, confirmDialog } from '../ui.js';
 import { BOOK } from '../books.js';
-import { getChapter, plain, segments, strongEntry, loadXref, getVerse } from '../bible.js';
+import { getChapter, plain, segments, strongEntry, loadXref, getVerse, allVersions, verLabel } from '../bible.js';
+import { S } from '../state.js';
 import { label, vkey, ckey, keyFromSelection, selectionLabel, splitAny } from '../ref.js';
 import { put, get, remove, byIndex, all, uid, touchHistory } from '../db.js';
 import { createStudy, addPassageToStudy, listStudies } from '../study.js';
@@ -14,8 +15,11 @@ export async function openVersePanel(book, ch, nums, onChange) {
   const title = selectionLabel(book, ch, sel);
   const rangeKey = keyFromSelection(book, ch, sel);
   const keys = sel.map(v => vkey(book, ch, v));
-  const chapter = await getChapter('rv1909', book, ch);
-  const text = sel.map(v => `${sel.length > 1 ? v + ' ' : ''}${plain(chapter[v - 1])}`).join(' ');
+  const chapter = await getChapter('rv1909', book, ch); // con números Strong
+  let mainVer = S.version || 'rv1909', mainCh = chapter;
+  if (mainVer !== 'rv1909') { try { mainCh = await getChapter(mainVer, book, ch); } catch (e) { mainVer = 'rv1909'; } }
+  const verAbbr = verLabel(mainVer);
+  const text = sel.map(v => `${sel.length > 1 ? v + ' ' : ''}${plain(mainCh[v - 1])}`).join(' ');
 
   const favs = new Set((await byIndex('favorites', 'chap', ckey(book, ch))).map(f => f.ref));
   const allFav = keys.every(k => favs.has(k));
@@ -44,11 +48,11 @@ export async function openVersePanel(book, ch, nums, onChange) {
       openVersePanel(book, ch, nums, onChange);
     }),
     act('copy', 'Copiar', async () => {
-      const ok = await copyText(`${title} — ${text} (RV1909)`);
+      const ok = await copyText(`${title} — ${text} (${verAbbr})`);
       toast(ok ? 'Texto copiado' : 'No se pudo copiar');
     }),
     act('share', 'Compartir', async () => {
-      const payload = `${title}\n${text}\n(Reina-Valera 1909)`;
+      const payload = `${title}\n${text}\n(${verAbbr})`;
       if (navigator.share) { try { await navigator.share({ title, text: payload }); } catch (e) { /* cancelado */ } }
       else { await copyText(payload); toast('Este dispositivo no permite compartir; el texto se copió'); }
     }),
@@ -63,7 +67,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
     } })),
     h('button', { class: 'btn small ghost', onclick: async () => { for (const k of keys) await remove('highlights', `hl:${k}`); changed(); } }, 'Quitar'));
 
-  const tabsDef = [['palabras', 'Palabras originales'], ['refs', 'Referencias'], ['comparar', 'Comparar'], ['notas', 'Notas']];
+  const tabsDef = [['palabras', 'Palabras originales'], ['refs', 'Referencias'], ['comparar', 'Comparar'], ['lugares', 'Lugares'], ['notas', 'Notas']];
   const tabBody = h('div', { class: 'tab-body' });
   const tabs = h('div', { class: 'tabs', role: 'tablist' }, tabsDef.map(([id, n]) =>
     h('button', { role: 'tab', 'data-tab': id, onclick: () => showTab(id) }, n)));
@@ -75,6 +79,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
       const content = id === 'palabras' ? await wordsTab(book, ch, sel, chapter)
         : id === 'refs' ? await refsTab(book, ch, sel)
           : id === 'comparar' ? await compareTab(book, ch, sel, chapter)
+            : id === 'lugares' ? await placesTab(book, ch, sel)
             : await notesTab(book, ch, keys, rangeKey, () => { changed(); showTab('notas'); });
       clear(tabBody).append(content);
     } catch (e) {
@@ -83,7 +88,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
   }
 
   const body = openPanel(title, h('div', { class: 'verse-panel' },
-    h('blockquote', { class: 'sel-text' }, text, h('cite', {}, 'RV1909')), actions, hl, tabs, tabBody));
+    h('blockquote', { class: 'sel-text' }, text, h('cite', {}, verAbbr)), actions, hl, tabs, tabBody));
   touchHistory('pasaje', rangeKey || keys[0], title);
   showTab('palabras');
   return body;
@@ -158,6 +163,16 @@ async function refsTab(book, ch, sel) {
   return wrap;
 }
 
+async function placesTab(book, ch, sel) {
+  const { placesForVerse, typeName } = await import('../atlas.js');
+  const wrap = h('div', {});
+  const seen = new Set(); const ul = h('ul', { class: 'list compact' });
+  for (const v of sel) for (const p of await placesForVerse(book, ch, v)) if (!seen.has(p.i)) { seen.add(p.i); ul.append(h('li', {}, h('a', { href: `#/atlas/${p.i}` }, h('strong', {}, p.n), h('span', {}, `${typeName(p.t)} · ${p.k} menciones · ver en el mapa`)))); }
+  wrap.append(seen.size ? ul : h('p', { class: 'hint' }, 'No hay lugares registrados para esta selección.'));
+  wrap.append(h('p', { class: 'hint' }, 'Fuente: OpenBible.info (CC BY 4.0). La lista de versículos por lugar de esta fuente puede estar incompleta para lugares muy mencionados.'));
+  return wrap;
+}
+
 export function hrefFor(k) {
   const r = splitAny(k);
   if (!r) return '#/biblia';
@@ -171,15 +186,16 @@ async function previewText(k) {
 }
 
 async function compareTab(book, ch, sel, chapter) {
-  let bes = [];
-  try { bes = await getChapter('bes', book, ch); } catch (e) { /* sin conexión y sin descarga */ }
+  const vers = await allVersions();
+  const chs = {};
+  for (const x of vers) { try { chs[x.code] = x.code === 'rv1909' ? chapter : await getChapter(x.code, book, ch); } catch (e) { chs[x.code] = null; } }
   const wrap = h('div', { class: 'compare' });
   for (const v of sel) {
     wrap.append(h('div', { class: 'cmp-row' },
       h('div', { class: 'cmp-v' }, `${v}`),
-      h('div', {}, h('div', { class: 'cmp-ver' }, 'RV1909'), h('p', {}, plain(chapter[v - 1]))),
-      h('div', {}, h('div', { class: 'cmp-ver' }, 'BES'), h('p', {}, bes[v - 1] || 'No disponible (descargue la versión para usarla sin conexión).'))));
+      vers.map(x => h('div', {}, h('div', { class: 'cmp-ver' }, x.abbr), h('p', {}, chs[x.code] ? (plain(chs[x.code][v - 1]) || '(este versículo no existe en esta versión)') : 'No disponible (descargue la versión para usarla sin conexión).')))));
   }
+  if (vers.some(x => x.own)) wrap.append(h('p', { class: 'hint' }, 'Las Biblias personales (cargadas por usted) se guardan solo en este equipo y no se publican.'));
   wrap.append(h('p', { class: 'hint' }, 'BES: La Biblia en Español Sencillo, © 2018 AudioBiblia.org / Irma Flores, CC BY 4.0. Es una traducción de lenguaje sencillo; para estudio formal compare con la RV1909 y, cuando sea posible, con el texto original.'));
   return wrap;
 }

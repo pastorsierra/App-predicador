@@ -126,7 +126,8 @@ function autoContent(id, auto, study, save) {
     return h('div', { class: 'auto' },
       h('div', { class: 'cmp' },
         h('div', {}, h('div', { class: 'cmp-ver' }, 'RV1909'), h('p', { class: 'bible' }, auto.verses.map(x => [h('sup', {}, x.v), x.rv, ' ']))),
-        auto.verses.some(x => x.bes) ? h('div', {}, h('div', { class: 'cmp-ver' }, 'BES'), h('p', { class: 'bible' }, auto.verses.map(x => [h('sup', {}, x.v), x.bes, ' ']))) : null));
+        auto.verses.some(x => x.bes) ? h('div', {}, h('div', { class: 'cmp-ver' }, 'BES'), h('p', { class: 'bible' }, auto.verses.map(x => [h('sup', {}, x.v), x.bes, ' ']))) : null,
+        (auto.others || []).map(o => h('div', {}, h('div', { class: 'cmp-ver' }, o.abbr), h('p', { class: 'bible' }, o.verses.map(x => [h('sup', {}, x.v), x.t, ' ']))))));
   }
   if (id === 'inmediato') {
     if (!auto.before.length && !auto.after.length) return h('p', { class: 'hint' }, 'El pasaje abarca todo el capítulo; revise el capítulo anterior y el siguiente.');

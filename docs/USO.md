@@ -39,6 +39,12 @@ Puede limitar la búsqueda a un Testamento o a un libro. También aparecen sus n
 - **Editar o crear:** botón **Editar** o **Nueva**. Use el mismo formato del Taller: `#` título, `## I.` puntos, `>` citas, `**frase de impacto**`, `==resaltado==`.
 - **Series** agrupa sus enseñanzas por serie y **Calendario** muestra las próximas y las ya predicadas.
 
+## Mis Biblias
+En **Ajustes → Mis Biblias** toque **Traer del Taller en este equipo** (o **Cargar archivo (.json)**) para usar las mismas versiones que tiene en el Taller, como la RVR1960. Luego, en la Biblia, elija la versión en el selector junto al capítulo. Para comparar, toque un versículo → **Comparar**, o en **T (Opciones de lectura)** active **Comparar con otra versión**.
+
+## Atlas bíblico
+Menú **Atlas** (en iPhone, desde Inicio). Busque un lugar, tóquelo en el mapa o en la lista para ver sus versículos. También, al tocar un versículo, la pestaña **Lugares** muestra los lugares de ese texto.
+
 ## Cuaderno
 Notas (con búsqueda, carpetas y tipos), favoritos, resaltados por color, marcadores (se pueden renombrar) e historial.
 

@@ -33,6 +33,8 @@ export async function renderHome(view) {
         h('span', { class: 'card-label' }, 'Mis estudios'), h('span', { class: 'card-title' }, `${c.studies}`), h('span', { class: 'card-sub' }, studies[0] ? `Último: ${studies[0].title}` : 'Aún no ha creado estudios')),
       h('a', { class: 'card', href: '#/cuaderno/notas' },
         h('span', { class: 'card-label' }, 'Cuaderno'), h('span', { class: 'card-title' }, `${c.notes}`), h('span', { class: 'card-sub' }, `notas · ${c.favorites} favoritos · ${c.highlights} resaltados · ${c.bookmarks} marcadores`)),
+      h('a', { class: 'card', href: '#/atlas' },
+        h('span', { class: 'card-label' }, 'Atlas bíblico'), h('span', { class: 'card-title small' }, 'Más de mil lugares'), h('span', { class: 'card-sub' }, 'Mapa sin conexión, con los versículos de cada lugar')),
       h('a', { class: 'card', href: '#/ajustes' },
         h('span', { class: 'card-label' }, 'Uso sin conexión'), h('span', { class: 'card-title small' }, off.complete ? 'Biblioteca descargada' : off.supported ? `${off.cachedBooks} de ${off.totalBooks} libros guardados` : 'No disponible en este navegador'),
         h('span', { class: 'card-sub' }, off.complete ? 'Puede leer y buscar sin internet' : 'Descargue los textos desde Ajustes'))),

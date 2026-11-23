@@ -6,6 +6,7 @@ import { BOOK } from './books.js';
 import { getChapter, plain, segments, strongEntry, loadXref, manifest, verseCount } from './bible.js';
 import { label, splitKey } from './ref.js';
 import { put, get, all, uid, touchHistory } from './db.js';
+import { listBibles } from './bibles.js';
 
 export const SECTIONS = [
   ['texto', 'Texto bíblico', 'auto', 'Texto del pasaje en las versiones disponibles.'],
@@ -47,6 +48,11 @@ export async function buildAuto(passageKey) {
   try { bes = await getChapter('bes', r.book, r.ch); } catch (e) { bes = []; }
   const verses = [];
   for (let v = v1; v <= v2; v++) verses.push({ v, rv: plain(rv[v - 1]), bes: bes[v - 1] || '' });
+  // Biblias personales del usuario (p. ej. RVR1960), solo si están en este equipo
+  const others = [];
+  for (const b of await listBibles()) {
+    try { const c = await getChapter(b.code, r.book, r.ch); others.push({ abbr: b.abbr, verses: verses.map(x => ({ v: x.v, t: plain(c[x.v - 1]) })) }); } catch (e) { /* no disponible */ }
+  }
 
   // Contexto inmediato: hasta 5 versículos antes y después dentro del capítulo
   const before = [], after = [];
@@ -88,7 +94,8 @@ export async function buildAuto(passageKey) {
     'Diccionarios hebreo (1894) y griego (1890) de James Strong — dominio público; edición digital de Open Scriptures (CC BY-SA).',
     `${m.xref.name} — ${m.xref.license}.`,
   ];
-  return { v1, v2, verses, before, after, words: wordList, xrefs, sources };
+  if (others.length) sources.push(`Biblias personales del usuario (solo en su equipo): ${others.map(o => o.abbr).join(', ')}.`);
+  return { v1, v2, verses, others, before, after, words: wordList, xrefs, sources };
 }
 
 export async function createStudy(passageKey, title) {
@@ -126,7 +133,7 @@ export async function studyToMarkdown(study) {
   if (study.tags?.length) L.push(`**Etiquetas:** ${study.tags.join(', ')}`, '');
   for (const s of SECTIONS) {
     L.push(`## ${s.n}. ${s.title}`, '');
-    if (s.id === 'texto') { auto.verses.forEach(x => L.push(`${x.v} ${x.rv}`)); L.push('', `_(RV1909)_`, ''); if (auto.verses.some(x => x.bes)) { auto.verses.forEach(x => L.push(`${x.v} ${x.bes}`)); L.push('', '_(BES)_', ''); } }
+    if (s.id === 'texto') { auto.verses.forEach(x => L.push(`${x.v} ${x.rv}`)); L.push('', `_(RV1909)_`, ''); if (auto.verses.some(x => x.bes)) { auto.verses.forEach(x => L.push(`${x.v} ${x.bes}`)); L.push('', '_(BES)_', ''); } (auto.others || []).forEach(o => { o.verses.forEach(x => L.push(`${x.v} ${x.t}`)); L.push('', `_(${o.abbr})_`, ''); }); }
     if (s.id === 'inmediato') { if (auto.before.length) L.push('**Antes:** ' + auto.before.map(x => `${x.v} ${x.text}`).join(' '), ''); if (auto.after.length) L.push('**Después:** ' + auto.after.map(x => `${x.v} ${x.text}`).join(' '), ''); }
     if (s.id === 'versiculos') auto.verses.forEach(x => { const t = study.sections.versiculos?.[`v${x.v}`]; L.push(`**v. ${x.v}** — ${x.rv}`, '', t ? t : '_(sin observaciones)_', ''); });
     if (s.id === 'palabras') auto.words.slice(0, 40).forEach(w => L.push(`- **${w.renderings.join(' / ')}** — ${w.num} ${w.lemma} (${w.xlit}), ${w.freq} veces en la RV1909: ${w.def}`));
