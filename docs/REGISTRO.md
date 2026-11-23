@@ -4,7 +4,7 @@ Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
 - **Versión:** 0.1.0 (MVP, Fase 1) — 23 nov 2026.
-- **Pruebas:** 52/52 automáticas correctas (ver `PRUEBAS.md`); falta la revisión manual en Safari real.
+- **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
 ## Funciones implementadas (verificadas)

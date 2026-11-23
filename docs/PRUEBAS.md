@@ -84,3 +84,22 @@ Las pruebas automáticas usan el motor de Chrome. Safari (WebKit) puede diferir.
 | Imprimir / PDF de un estudio | Muestra la vista de impresión; se puede guardar como PDF |
 | Girar el iPad (vertical/horizontal) | El diseño se adapta; panel lateral en horizontal |
 | Teclado sobre los campos del estudio | El campo activo queda visible |
+
+## Pruebas de la versión publicada (producción) — 23 nov 2026
+
+URL: https://pastorsierra.github.io/App-predicador/ · Repositorio: https://github.com/pastorsierra/App-predicador
+
+| Verificación | Resultado |
+|---|---|
+| Revisión de secretos en los 245 archivos del repositorio (claves, tokens, contraseñas, correos) | Ninguno encontrado |
+| Datos personales, respaldos, capturas o resultados de pruebas en el repositorio | Ninguno; excluidos por `.gitignore` |
+| La URL publicada responde con la app (título «Escudriñad») | OK |
+| `sw.js` publicado es la versión v0.1.0 con descarga forzada (`cache: 'reload'`) | OK |
+| `manifest.webmanifest` (nombre, inicio, alcance, modo standalone, íconos) | OK |
+| `data/manifest.json` publicado: 31.087 versos RV1909, 31.102 BES, 171.524 referencias | OK |
+| Archivo de libros (`data/rv1909/JHN.json`) servido correctamente | OK |
+| `data/LICENCIAS.txt` publicado con las cuatro licencias | OK |
+| 52 pruebas funcionales con los mismos archivos publicados, servidos bajo `/App-predicador/` (iPad y iPhone): navegación, búsqueda, notas, marcadores, favoritos, resaltado, estudios, exportación, importación, sin conexión | 52/52 OK |
+| Actualización de versión del Service Worker (`tests/actualizacion.mjs`): aviso, instalación, borrado de la caché anterior, conservación de textos y datos del usuario | 7/7 OK |
+
+Limitación: el entorno de Claude no puede ejecutar un navegador contra github.io; la URL real se verificó descargando sus archivos, y el comportamiento con un navegador real sobre los mismos archivos y la misma ruta. Queda la revisión manual en Safari (lista de arriba).
