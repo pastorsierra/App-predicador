@@ -98,10 +98,11 @@ export async function concordance(num, { scope = 'all', limit = 1000, onProgress
 // Búsqueda en los datos personales
 export async function searchUserData(q) {
   const n = norm(q).trim();
-  if (!n) return { notes: [], studies: [] };
+  if (!n) return { notes: [], studies: [], sermons: [] };
   const terms = n.split(/\s+/);
   const hit = (s) => { const t = norm(s); return terms.every(w => t.includes(w)); };
   const notes = (await all('notes')).filter(x => hit(`${x.title || ''} ${x.body || ''} ${(x.tags || []).join(' ')} ${x.refLabel || ''}`));
   const studies = (await all('studies')).filter(x => hit(`${x.title || ''} ${x.passageLabel || ''} ${(x.tags || []).join(' ')} ${Object.values(x.sections || {}).map(s => s.text || '').join(' ')}`));
-  return { notes, studies };
+  const sermons = (await all('sermons')).filter(x => hit(`${x.titulo || ''} ${x.texto || ''} ${x.serie || ''} ${x.notas || ''} ${x.ensenanza || ''}`));
+  return { notes, studies, sermons };
 }

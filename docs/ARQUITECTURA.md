@@ -52,7 +52,8 @@ escudrinad/
 │       ├── offline.js        descargas para uso sin conexión
 │       ├── state.js          preferencias y perfil doctrinal
 │       ├── ui.js             utilidades de interfaz (diálogos, íconos, avisos)
-│       └── views/            pantallas: inicio, lector, panel de versículo, búsqueda, estudios, cuaderno, ajustes
+│       ├── taller/           enseñanzas del Taller: diseño de página, Word, archivo cifrado, importación
+│       └── views/            pantallas: inicio, lector, enseñanzas, panel de versículo, búsqueda, estudios, cuaderno, ajustes
 ├── supabase/schema.sql       base de datos en la nube (diseñada, para la Fase 1b)
 ├── tools/                    scripts que generan data/ a partir de las fuentes originales
 ├── tests/e2e.mjs             pruebas automáticas en navegador (iPad y iPhone)
@@ -63,7 +64,7 @@ escudrinad/
 
 Cada módulo futuro se añade como: (a) un archivo en `js/views/`, (b) su lógica en `js/`, (c) una entrada en la navegación de `main.js` **solo cuando funcione**, y (d) sus tablas ya previstas en `schema.sql`. No hay que reconstruir lo existente.
 
-Navegación principal actual: **Inicio · Biblia · Buscar · Estudios · Cuaderno · Ajustes**. Cuando existan, se añadirán **Biblioteca** y **Predicación** (como pidió la especificación); exégesis, hermenéutica, doctrina y lenguas originales vivirán dentro de *Estudios*; atlas, cronología y personajes dentro de *Biblia/Estudios*, para no saturar el menú.
+Navegación principal actual: **Inicio · Biblia · Enseñanzas · Estudios · Buscar · Cuaderno · Ajustes**. Cuando existan, se añadirán **Biblioteca** y **Predicación** (como pidió la especificación); exégesis, hermenéutica, doctrina y lenguas originales vivirán dentro de *Estudios*; atlas, cronología y personajes dentro de *Biblia/Estudios*, para no saturar el menú.
 
 ## 5. Modelo de datos
 

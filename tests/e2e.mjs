@@ -244,6 +244,7 @@ async function run(profile) {
     const [dl] = await Promise.all([page.waitForEvent('download'), page.locator('.study-tools button', { hasText: 'Exportar texto' }).click()]);
     const p = await dl.path(); const txt = fs.readFileSync(p, 'utf8');
     if (!txt.includes('Interpretación de prueba persistente') || !txt.includes('Arrepentíos')) throw new Error('contenido incompleto');
+    if (!dl.suggestedFilename().endsWith('.md')) throw new Error('nombre de archivo perdido: ' + dl.suggestedFilename());
     return `${dl.suggestedFilename()} (${txt.length} caracteres)`;
   });
 
@@ -263,6 +264,7 @@ async function run(profile) {
     const [dl] = await Promise.all([page.waitForEvent('download'), page.locator('button', { hasText: 'Exportar respaldo' }).click()]);
     const p = await dl.path(); const data = JSON.parse(fs.readFileSync(p, 'utf8'));
     if (data.app !== 'escudrinad' || !data.stores.notes.length || !data.stores.studies.length) throw new Error('respaldo incompleto');
+    if (!dl.suggestedFilename().endsWith('.json')) throw new Error('nombre de archivo perdido: ' + dl.suggestedFilename());
     await page.setInputFiles('input[type=file]', p);
     await page.waitForSelector('.toast.show >> text=importado');
     const msg = await page.locator('.toast').innerText();

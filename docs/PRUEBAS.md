@@ -103,3 +103,63 @@ URL: https://pastorsierra.github.io/App-predicador/ · Repositorio: https://gith
 | Actualización de versión del Service Worker (`tests/actualizacion.mjs`): aviso, instalación, borrado de la caché anterior, conservación de textos y datos del usuario | 7/7 OK |
 
 Limitación: el entorno de Claude no puede ejecutar un navegador contra github.io; la URL real se verificó descargando sus archivos, y el comportamiento con un navegador real sobre los mismos archivos y la misma ruta. Queda la revisión manual en Safari (lista de arriba).
+
+## Etapa 1 de la unión con el Taller — Enseñanzas (versión 0.2.0, 23 nov 2026)
+
+Prueba automática `tests/ensenanzas.mjs` (datos ficticios y archivo cifrado de prueba creado con `tests/fixtures/hacer-archivo.mjs`).
+
+**Resultado: 35/35 correctas.** Además: 52/52 de las pruebas anteriores y 7/7 de actualización siguen pasando.
+
+| Función | Resultado | Estado |
+|---|---|---|
+| [iPad] Sección Enseñanzas visible en el menú | vacía, con guía de importación | OK |
+| [iPad] Traer del Taller en este equipo (mismo sitio) | 2 enseñanzas, marcas y clave del archivo traídas | OK |
+| [iPad] Lector con el diseño del Word | estilos Nuevo y Clásico (con marca de agua) correctos | OK |
+| [iPad] Descargar Word | PRUEBA Uno (clasico).docx (103 KB) | OK |
+| [iPad] Marcar como predicada | Predicada el dom, 1 feb 2026 | OK |
+| [iPad] Editar y guardar | persistente tras recargar | OK |
+| [iPad] Crear enseñanza nueva | creada con frase de impacto | OK |
+| [iPad] Importar copia de seguridad del Taller (fusión) | Importadas: 1 nuevas, 1 actualizadas, 1 sin cambios | OK |
+| [iPad] Filtro y búsqueda en Mis enseñanzas | 1 resultado por contenido | OK |
+| [iPad] Series | Serie de prueba · 2 enseñanzas · 2 predicadas | OK |
+| [iPad] Calendario | próximas y predicadas | OK |
+| [iPad] Archivo cifrado (clave traída del Taller) | 2 enseñanzas del archivo | OK |
+| [iPad] Abrir enseñanza del archivo y versión nueva | original, nueva y copia a Mis enseñanzas | OK |
+| [iPad] Clave incorrecta y correcta | rechaza la incorrecta, abre con la correcta (sin distinguir mayúsculas, como el Taller) | OK |
+| [iPad] Búsqueda global encuentra enseñanzas | aparece en «En sus datos» | OK |
+| [iPad] El respaldo no incluye la clave del archivo | 5 enseñanzas respaldadas, sin clave | OK |
+| [iPad] Enseñanzas y archivo sin conexión | archivo y enseñanzas abren sin internet | OK |
+| [iPad] Errores de consola | 0 errores | OK |
+| [iPhone] Sección Enseñanzas visible en el menú | vacía, con guía de importación | OK |
+| [iPhone] Traer del Taller en este equipo (mismo sitio) | 2 enseñanzas, marcas y clave del archivo traídas | OK |
+| [iPhone] Lector con el diseño del Word | estilos Nuevo y Clásico (con marca de agua) correctos | OK |
+| [iPhone] Descargar Word | PRUEBA Uno (clasico).docx (103 KB) | OK |
+| [iPhone] Marcar como predicada | Predicada el dom, 1 feb 2026 | OK |
+| [iPhone] Editar y guardar | persistente tras recargar | OK |
+| [iPhone] Crear enseñanza nueva | creada con frase de impacto | OK |
+| [iPhone] Importar copia de seguridad del Taller (fusión) | Importadas: 1 nuevas, 1 actualizadas, 1 sin cambios | OK |
+| [iPhone] Filtro y búsqueda en Mis enseñanzas | 1 resultado por contenido | OK |
+| [iPhone] Series | Serie de prueba · 2 enseñanzas · 2 predicadas | OK |
+| [iPhone] Calendario | próximas y predicadas | OK |
+| [iPhone] Archivo cifrado (clave traída del Taller) | 2 enseñanzas del archivo | OK |
+| [iPhone] Abrir enseñanza del archivo y versión nueva | original, nueva y copia a Mis enseñanzas | OK |
+| [iPhone] Clave incorrecta y correcta | rechaza la incorrecta, abre con la correcta (sin distinguir mayúsculas, como el Taller) | OK |
+| [iPhone] Búsqueda global encuentra enseñanzas | aparece en «En sus datos» | OK |
+| [iPhone] El respaldo no incluye la clave del archivo | 5 enseñanzas respaldadas, sin clave | OK |
+| [iPhone] Errores de consola | 0 errores | OK |
+
+Verificación con los datos reales del Taller (solo en el entorno de pruebas; nada se subió al repositorio):
+
+- Importación del archivo de sincronización: 72 enseñanzas nuevas, sin errores.
+- Las 72 se abren con título y diseño; las 7 series aparecen agrupadas.
+- Word generado con una enseñanza real: archivo .docx válido con su contenido.
+- Migración de la base de datos de la versión 0.1.0 a la 0.2.0: los datos existentes se conservan.
+
+Errores encontrados y corregidos en esta etapa:
+
+| # | Error | Corrección |
+|---|---|---|
+| 7 | Error de sintaxis (paréntesis de más) en el calendario | Corregido; detectado por la prueba antes de publicar |
+| 8 | «Traer del Taller» fallaba: se perdía la referencia al botón después de esperar | Se guarda la referencia antes de esperar |
+| 9 | El botón de tema/diseño activo no se marcaba bien (también existía en Ajustes y en el lector) | Misma corrección en los tres lugares |
+| 10 | Las descargas podían perder su nombre («download») | El enlace se retira tras unos segundos y los nombres de archivo van sin tildes |

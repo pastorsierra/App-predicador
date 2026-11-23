@@ -32,6 +32,13 @@ Puede limitar la búsqueda a un Testamento o a un libro. También aparecen sus n
 - **Afirmación clasificada**: anote algo indicando si es *afirmación del texto*, *inferencia*, *interpretación*, *aplicación* u *opinión de comentarista*.
 - **Exportar texto** descarga el estudio; **Imprimir / PDF** permite guardarlo como PDF desde el iPad (Compartir → Guardar en Archivos).
 
+## Enseñanzas (Taller del Predicador)
+- **Traer sus enseñanzas:** en **Enseñanzas → Mis enseñanzas**, toque **Traer del Taller en este equipo**. Funciona si el Taller y esta app se abren en el mismo lugar: las dos en Safari, o las dos desde la pantalla de inicio. Si no aparecen, en el Taller vaya a **Ajustes → Descargar copia** y aquí use **Importar copia de seguridad**. Nada se borra y el Taller sigue igual.
+- **Mi archivo:** sus enseñanzas cifradas. Se abre con la misma clave del Taller (se pide una sola vez en cada equipo).
+- **Leer una enseñanza:** elija el diseño (Clásico, Nuevo o Minimalista), **Descargar Word**, **Imprimir / PDF**, **Copiar texto** o márquela como **Predicada** con la fecha.
+- **Editar o crear:** botón **Editar** o **Nueva**. Use el mismo formato del Taller: `#` título, `## I.` puntos, `>` citas, `**frase de impacto**`, `==resaltado==`.
+- **Series** agrupa sus enseñanzas por serie y **Calendario** muestra las próximas y las ya predicadas.
+
 ## Cuaderno
 Notas (con búsqueda, carpetas y tipos), favoritos, resaltados por color, marcadores (se pueden renombrar) e historial.
 

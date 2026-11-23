@@ -18,3 +18,7 @@ Cada recurso integrado fue verificado antes de incluirse. El aviso de licencias 
 - MorphGNT / SBLGNT (morfología griega) — CC BY-SA.
 - OpenBible.info geodatos bíblicos — CC BY.
 (Se confirmará cada licencia al momento de integrarlos.)
+
+## Material del Taller del Predicador
+- Las enseñanzas, el diseño de página, el generador de Word y el logo de la IPUC provienen de la app del propio usuario (Taller del Predicador). Las enseñanzas se publican solo cifradas.
+- `vendor/docx.js`: biblioteca «docx» (licencia MIT), copiada del Taller para generar archivos de Word.

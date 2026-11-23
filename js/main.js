@@ -9,12 +9,14 @@ import { renderSearch } from './views/search.js';
 import { renderStudies, renderStudy } from './views/studies.js';
 import { renderNotebook } from './views/notebook.js';
 import { renderSettings } from './views/settings.js';
+import { renderEnsenanzas, renderEnsenanza, renderArchivoItem, renderEditor } from './views/ensenanzas.js';
 
 const NAV = [
   ['inicio', 'Inicio', 'home'],
   ['biblia', 'Biblia', 'book'],
-  ['buscar', 'Buscar', 'search'],
+  ['ensenanzas', 'Enseñanzas', 'note'],
   ['estudios', 'Estudios', 'study'],
+  ['buscar', 'Buscar', 'search'],
   ['cuaderno', 'Cuaderno', 'notebook'],
   ['ajustes', 'Ajustes', 'settings'],
 ];
@@ -49,7 +51,7 @@ async function route() {
   const name = parts[0] || 'inicio';
   const view = document.getElementById('view');
   closePanel();
-  markActive(name === 'estudio' ? 'estudios' : name);
+  markActive({ estudio: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas' }[name] || name);
   clear(view);
   view.className = `view view-${name}`;
   try {
@@ -60,6 +62,9 @@ async function route() {
       case 'estudios': await renderStudies(view); break;
       case 'estudio': await renderStudy(view, parts[1]); break;
       case 'cuaderno': await renderNotebook(view, parts[1] || 'notas'); break;
+      case 'ensenanzas': await renderEnsenanzas(view, parts[1] || 'mis'); break;
+      case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
+      case 'archivo': await renderArchivoItem(view, parts[1]); break;
       case 'ajustes': await renderSettings(view); break;
       default: view.append(h('div', { class: 'empty' }, 'Página no encontrada.'));
     }

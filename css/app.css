@@ -309,7 +309,7 @@ mark { background: var(--gold-soft); color: inherit; border-bottom: 2px solid va
   .only-phone { display: inline-grid; }
   .view { padding: calc(16px + env(safe-area-inset-top)) 16px calc(90px + env(safe-area-inset-bottom)); }
   .reader-head { margin: 0 -16px; padding-left: 6px; padding-right: 6px; }
-  .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
+  .tabbar { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 94%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
   .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; color: var(--muted); padding: 4px 0; }
   .tabbar a.active { color: var(--navy); } .tabbar a.active .icon { color: var(--gold); }
   .panel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; max-height: 78dvh; border-radius: 18px 18px 0 0; border: 1px solid var(--line); box-shadow: 0 -10px 40px rgba(0, 0, 0, .18); padding-top: 0; animation: up .22s ease-out; }
@@ -351,4 +351,25 @@ mark { background: var(--gold-soft); color: inherit; border-bottom: 2px solid va
   .study-layout { display: block; }
   textarea { border: 0; padding: 0; min-height: 0; resize: none; overflow: visible; }
   textarea:placeholder-shown { display: none; }
+}
+
+/* ---------- Enseñanzas (Taller del Predicador) ---------- */
+.ens-title { font-size: 24px; margin: 4px 0 6px; }
+.ens-head .opt-row { margin: 8px 0; }
+.ens-page { margin: 10px 0 40px; }
+.ens-page .pg { color: #000; }
+.ens-form { max-width: 900px; margin-bottom: 20px; }
+.ens-form .form-row { flex-wrap: wrap; align-items: center; }
+.ens-form label.inline { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; flex: 0 1 auto; }
+.ens-form label.inline input[type=date] { width: auto; }
+.ens-form input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--navy-2); }
+.md-editor { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; line-height: 1.55; min-height: 360px; }
+.key-form .btn-row input { flex: 1 1 220px; width: auto; }
+.import-more summary, .ens-form summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+.series-list { padding-left: 0; }
+@media (max-width: 420px) { .tabbar a span { font-size: 10px; } }
+@media print {
+  .ens-head, .page-head, .page-tabs { display: none !important; }
+  .ens-page { margin: 0; }
+  .ens-page .pg { box-shadow: none; }
 }

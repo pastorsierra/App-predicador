@@ -170,7 +170,7 @@ function readingOptions(redraw) {
     h('span', {}, h('strong', {}, name), desc ? h('small', {}, desc) : null),
     h('input', { type: 'checkbox', checked: S[k], onchange: async (e) => { await setPref(k, e.target.checked); redraw(); } }));
   const themes = h('div', { class: 'seg' }, ['claro', 'sepia', 'oscuro'].map(t =>
-    h('button', { class: S.theme === t ? 'on' : '', onclick: async (e) => { await setPref('theme', t); themes.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === e.currentTarget)); } }, t[0].toUpperCase() + t.slice(1))));
+    h('button', { class: S.theme === t ? 'on' : '', onclick: async (e) => { const btn = e.currentTarget; await setPref('theme', t); themes.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn)); } }, t[0].toUpperCase() + t.slice(1))));
   modal({ title: 'Opciones de lectura', content: h('div', { class: 'form' },
     h('div', { class: 'opt-row' }, h('span', {}, 'Tamaño de letra'), size, sizeVal),
     h('div', { class: 'opt-row' }, h('span', {}, 'Apariencia'), themes),

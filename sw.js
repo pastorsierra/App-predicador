@@ -1,13 +1,13 @@
 // Service Worker: aplicación disponible sin conexión.
 // - Interfaz (shell): precache versionado; red primero para actualizar, caché si no hay conexión.
 // - Datos bíblicos (data/): caché primero; lo que se consulta queda guardado para uso sin conexión.
-const VERSION = 'v0.1.0';
+const VERSION = 'v0.2.0';
 const SHELL = `escudrinad-shell-${VERSION}`;
 const DATA = 'escudrinad-datos-v1';
 const SHELL_FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css',
   'js/main.js', 'js/books.js', 'js/ref.js', 'js/bible.js', 'js/db.js', 'js/ui.js', 'js/search.js', 'js/study.js', 'js/state.js', 'js/offline.js',
-  'js/views/panel.js', 'js/views/home.js', 'js/views/reader.js', 'js/views/verse.js', 'js/views/search.js', 'js/views/studies.js', 'js/views/notebook.js', 'js/views/settings.js',
+  'js/views/panel.js', 'js/views/ensenanzas.js', 'js/taller/page.js', 'js/taller/store.js', 'js/taller/wordgen.js', 'js/taller/logo.js', 'css/taller.css', 'vendor/docx.js', 'js/views/home.js', 'js/views/reader.js', 'js/views/verse.js', 'js/views/search.js', 'js/views/studies.js', 'js/views/notebook.js', 'js/views/settings.js',
   'data/manifest.json', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
 ];
 
@@ -25,6 +25,14 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
   const path = url.pathname;
+  // Archivo cifrado de enseñanzas del Taller (otra carpeta del mismo sitio): red primero, copia guardada sin conexión
+  if (/\.enc$/.test(path)) {
+    e.respondWith(caches.open(DATA).then(async c => {
+      try { const r = await fetch(e.request, { cache: 'no-cache' }); if (r.ok) c.put(e.request.url, r.clone()); return r; }
+      catch (err) { return (await c.match(e.request.url)) || Response.error(); }
+    }));
+    return;
+  }
   if (/\/data\/(rv1909|bes|xref|strong)\//.test(path)) {
     e.respondWith(caches.open(DATA).then(async c => {
       const hit = await c.match(e.request.url);

@@ -59,9 +59,10 @@ export async function renderSearch(view, params) {
     } else {
       const [res, mine] = await Promise.all([searchText('rv1909', q0, { scope: scope0, onProgress }), searchUserData(q0)]);
       progress.remove();
-      if (mine.notes.length || mine.studies.length) {
+      if (mine.notes.length || mine.studies.length || mine.sermons.length) {
         out.append(h('section', { class: 'mine' }, h('h2', {}, 'En sus datos'),
           h('ul', { class: 'list' },
+            mine.sermons.slice(0, 30).map(s => h('li', {}, h('a', { href: `#/ensenanza/${encodeURIComponent(s.id)}` }, h('strong', {}, `Enseñanza: ${s.titulo || 'sin título'}`), h('span', {}, s.texto || '')))),
             mine.studies.map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, `Estudio: ${s.title}`), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))),
             mine.notes.map(n => h('li', {}, h('a', { href: n.ref ? hrefFor(n.ref) : '#/cuaderno/notas' }, h('strong', {}, `Nota: ${n.title || n.refLabel || 'sin título'}`), h('span', {}, (n.body || '').slice(0, 120))))))));
       }

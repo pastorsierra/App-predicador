@@ -1,27 +1,32 @@
 // Persistencia local real en IndexedDB.
 // Cada registro lleva: id, createdAt, updatedAt, deletedAt (borrado lógico) — listo para sincronizar en la Fase de nube.
 const DB_NAME = 'escudrinad';
-const DB_VERSION = 1;
-export const STORES = ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'history', 'settings'];
+const DB_VERSION = 2;
+export const SECRET_SETTINGS = ['tallerLibKey'];
+export const STORES = ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'history', 'settings', 'sermons'];
 
 let dbp = null;
 function open() {
   if (dbp) return dbp;
   dbp = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = () => {
+    req.onupgradeneeded = (e) => {
       const db = req.result;
       const mk = (name, idx = []) => {
         const s = db.createObjectStore(name, { keyPath: 'id' });
         for (const i of idx) s.createIndex(i, i, { unique: false });
       };
-      mk('notes', ['chap', 'ref', 'updatedAt']);
-      mk('highlights', ['chap']);
-      mk('favorites', ['chap']);
-      mk('bookmarks', ['updatedAt']);
-      mk('studies', ['updatedAt']);
-      mk('history', ['at']);
-      mk('settings');
+      // Migraciones por versión: nunca se borra ni se recrea un almacén existente
+      if (e.oldVersion < 1) {
+        mk('notes', ['chap', 'ref', 'updatedAt']);
+        mk('highlights', ['chap']);
+        mk('favorites', ['chap']);
+        mk('bookmarks', ['updatedAt']);
+        mk('studies', ['updatedAt']);
+        mk('history', ['at']);
+        mk('settings');
+      }
+      if (e.oldVersion < 2) mk('sermons', ['updatedAt']); // Enseñanzas (Taller del Predicador)
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
@@ -104,6 +109,8 @@ export async function recentHistory(kind, limit = 20) {
 export async function exportAll() {
   const data = { app: 'escudrinad', format: 1, exportedAt: now(), stores: {} };
   for (const s of STORES) data.stores[s] = await all(s, { includeDeleted: true });
+  // Las claves nunca salen del dispositivo (ni en respaldos)
+  data.stores.settings = data.stores.settings.filter(x => !SECRET_SETTINGS.includes(x.id));
   return data;
 }
 
@@ -117,6 +124,7 @@ export async function importAll(data) {
     await tx(s, 'readwrite', async store => {
       for (const rec of incoming) {
         if (!rec || !rec.id) continue;
+        if (s === 'settings' && SECRET_SETTINGS.includes(rec.id)) continue;
         const cur = await req2p(store.get(rec.id));
         if (!cur || (rec.updatedAt || '') > (cur.updatedAt || '')) { store.put(rec); n++; }
       }
@@ -128,7 +136,7 @@ export async function importAll(data) {
 
 export async function counts() {
   const out = {};
-  for (const s of ['notes', 'highlights', 'favorites', 'bookmarks', 'studies']) out[s] = (await all(s)).length;
+  for (const s of ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'sermons']) out[s] = (await all(s)).length;
   return out;
 }
 

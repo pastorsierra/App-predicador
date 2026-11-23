@@ -89,12 +89,21 @@ export function fmtDate(iso) {
   return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// Nombre de archivo seguro: sin tildes ni caracteres prohibidos (algunos navegadores descartan el nombre si los lleva).
+// El contenido del archivo sí conserva sus tildes.
+export function safeFileName(name) {
+  return String(name || 'archivo').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[ñÑ]/g, m => (m === 'ñ' ? 'n' : 'N'))
+    .replace(/[^\w.()\- ]+/g, '').replace(/\s+/g, ' ').trim() || 'archivo';
+}
+
 export function download(filename, text, type = 'application/json') {
+  filename = safeFileName(filename);
   const blob = new Blob([text], { type: `${type};charset=utf-8` });
   const url = URL.createObjectURL(blob);
   const a = h('a', { href: url, download: filename });
-  document.body.append(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  document.body.append(a); a.click();
+  // Quitar el enlace de inmediato hace que algunos navegadores pierdan el nombre del archivo
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 4000);
 }
 
 export async function copyText(text) {

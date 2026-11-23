@@ -20,7 +20,10 @@ Arquitectura, tecnologías, estructura de módulos, base de datos local y en la 
 - ✔ Respaldo y restauración (exportar/importar con fusión).
 - ✔ Perfil doctrinal configurable (IPUC unicitario por defecto) y marco doctrinal personal guardado.
 
-## Fase 1b — Cuenta y sincronización ○ (siguiente)
+## Unión con el Taller del Predicador ◐ (en curso)
+Etapa 1 ✔ (v0.2.0): Enseñanzas, archivo cifrado, series, calendario, Word/PDF, editor e importación. Etapas siguientes en `REGISTRO.md`.
+
+## Fase 1b — Cuenta y sincronización ○
 Requiere: crear proyecto gratuito en Supabase y pegar la URL y la clave pública en la app (la clave pública es segura en el navegador; la secreta nunca).
 - Inicio de sesión (correo o Apple), sincronización iPhone ↔ iPad, estado visible, recuperación.
 - Bloqueo de la app con Face ID (passkey).

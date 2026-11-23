@@ -9,7 +9,7 @@ export async function renderSettings(view) {
 
   // Apariencia
   const themes = h('div', { class: 'seg' }, ['claro', 'sepia', 'oscuro'].map(t =>
-    h('button', { class: S.theme === t ? 'on' : '', onclick: async (e) => { await setPref('theme', t); themes.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === e.currentTarget)); } }, t[0].toUpperCase() + t.slice(1))));
+    h('button', { class: S.theme === t ? 'on' : '', onclick: async (e) => { const btn = e.currentTarget; await setPref('theme', t); themes.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn)); } }, t[0].toUpperCase() + t.slice(1))));
   const sizeVal = h('span', { class: 'val' }, `${S.fontSize} px`);
   const size = h('input', { type: 'range', min: 14, max: 30, value: S.fontSize, 'aria-label': 'Tamaño de letra', oninput: async (e) => { await setPref('fontSize', +e.target.value); sizeVal.textContent = `${e.target.value} px`; preview.style.fontSize = `${e.target.value}px`; } });
   const preview = h('p', { class: 'bible preview', style: { fontSize: `${S.fontSize}px` } }, 'Escudriñad las Escrituras, porque á vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí. — Juan 5:39');
@@ -64,7 +64,7 @@ export async function renderSettings(view) {
     e.target.value = '';
   } });
   view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Respaldo y recuperación'),
-    h('p', {}, `En este dispositivo: ${c.notes} notas, ${c.studies} estudios, ${c.favorites} favoritos, ${c.highlights} resaltados, ${c.bookmarks} marcadores.`),
+    h('p', {}, `En este dispositivo: ${c.sermons} enseñanzas, ${c.notes} notas, ${c.studies} estudios, ${c.favorites} favoritos, ${c.highlights} resaltados, ${c.bookmarks} marcadores.`),
     h('div', { class: 'btn-row' },
       h('button', { class: 'btn primary', onclick: async () => {
         const data = await exportAll();
@@ -73,6 +73,13 @@ export async function renderSettings(view) {
       } }, icon('download', 18), 'Exportar respaldo'),
       h('button', { class: 'btn', onclick: () => fileIn.click() }, 'Importar respaldo'), fileIn),
     h('p', { class: 'hint' }, 'Importar fusiona: conserva la versión más reciente de cada registro y no borra lo que ya tiene.')));
+
+  // Enseñanzas: clave del archivo
+  const { hasKey, forgetKey } = await import('../taller/store.js');
+  const keyInfo = h('p', {}, (await hasKey()) ? 'El archivo cifrado de enseñanzas está abierto en este equipo.' : 'El archivo cifrado de enseñanzas todavía no se ha abierto en este equipo.');
+  view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Archivo de enseñanzas'), keyInfo,
+    h('p', { class: 'hint' }, 'La clave se guarda solo en este equipo; no va en los respaldos ni en GitHub.'),
+    (await hasKey()) ? h('button', { class: 'btn small', onclick: async () => { if (await confirmDialog('Cerrar el archivo', '¿Olvidar la clave en este equipo? Tendrá que escribirla otra vez para abrir el archivo.', 'Olvidar clave')) { await forgetKey(); keyInfo.textContent = 'Clave olvidada en este equipo.'; } } }, 'Olvidar la clave en este equipo') : null));
 
   // Sincronización (estado real)
   view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Sincronización entre dispositivos'),

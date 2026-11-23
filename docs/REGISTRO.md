@@ -3,12 +3,29 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.1.0 (MVP, Fase 1) — 23 nov 2026.
+- **Versión:** 0.2.0 — 23 nov 2026. Incluye la etapa 1 de la unión con el Taller del Predicador (Enseñanzas).
 - **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
 ## Funciones implementadas (verificadas)
 Biblia RV1909 completa · selector libro/capítulo · lectura continua · comparación BES (panel y paralelo) · búsqueda de pasajes, palabras, frases, Strong y datos propios · filtro por testamento/libro · panel de versículo con 7 acciones · resaltado en 5 colores · favoritos · marcadores (renombrables) · notas por versículo, rango, capítulo y generales (tipo, carpeta, etiquetas) · léxico Strong hebreo/griego con frecuencia · concordancia con traducciones de la RV1909 · referencias cruzadas con vista previa · motor de estudio de 22 secciones con secciones automáticas y afirmaciones clasificadas · guardado automático · exportar estudio (.md) · imprimir/PDF · añadir pasajes a estudios · historial (lectura, pasajes, estudios) · temas claro/sepia/oscuro · tamaño de letra · Strong en línea · PWA instalable · funcionamiento sin conexión con descargas gestionadas · almacenamiento persistente · respaldo/importación con fusión · perfil doctrinal y marco personal.
+
+## Unión con el Taller del Predicador
+Decisión (23 nov 2026, aprobada por el usuario): unir las dos apps en una sola, con el nombre **Taller del Predicador**, construida sobre la base de Escudriñad, pasando las funciones del Taller por etapas. El Taller actual (repositorio `Assj`) sigue funcionando sin cambios hasta que la app unida haga todo lo que él hace.
+
+| Etapa | Contenido | Estado |
+|---|---|---|
+| 1 | Enseñanzas: mis enseñanzas, archivo cifrado (misma clave), series, calendario, predicadas, lectura con el diseño del Word (clásico, nuevo, minimalista), descarga en Word, imprimir/PDF, editor, importación desde el Taller | ✔ v0.2.0 |
+| 2 | Modo púlpito, diapositivas, PDF de series, versiones nuevas (revisión completa) | ○ |
+| 3 | Bloqueo con contraseña y Face ID; sincronización entre Safari y el ícono | ○ |
+| 4 | Herramientas de IA del Taller (marcadas como IA, con verificación de citas) | ○ |
+| 5 | Lugares en mapa, línea de tiempo, plan de lectura, banco de ilustraciones | ○ |
+| 6 | Cambio de nombre a «Taller del Predicador» y retiro de la app anterior | ○ |
+
+Notas técnicas de la etapa 1:
+- El archivo cifrado se lee del Taller publicado (`../Assj/biblioteca.enc`, mismo sitio). **Antes de retirar o volver privado el repositorio `Assj`, hay que copiar `biblioteca.enc` y `biblioteca-nueva.enc` a este repositorio** y cambiar `ARCHIVE_URLS` en `js/taller/store.js`.
+- El diseño de página, el generador de Word (`js/taller/wordgen.js`), el logo y `vendor/docx.js` se tomaron del Taller sin cambios de formato.
+- La clave del archivo se guarda solo en el dispositivo (`tallerLibKey`), se excluye de los respaldos y nunca se sube a GitHub.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |
@@ -23,7 +40,7 @@ Biblia RV1909 completa · selector libro/capítulo · lectura continua · compar
 | 2026-11-23 | Módulos no construidos no aparecen en la navegación | Regla del proyecto: ningún botón que no funcione. |
 
 ## Errores corregidos
-Ver tabla en `PRUEBAS.md` (6 registrados).
+Ver tablas en `PRUEBAS.md` (10 registrados).
 
 ## Pendiente (por fase)
 Ver `ROADMAP.md`. Lo inmediato:

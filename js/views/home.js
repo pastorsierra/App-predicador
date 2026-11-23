@@ -27,6 +27,8 @@ export async function renderHome(view) {
     h('section', { class: 'cards' },
       h('a', { class: 'card continue', href: `#/biblia/${pos.book}/${pos.ch}` },
         h('span', { class: 'card-label' }, 'Continuar lectura'), h('span', { class: 'card-title' }, `${BOOK[pos.book].name} ${pos.ch}`), h('span', { class: 'card-sub' }, 'Reina-Valera 1909')),
+      h('a', { class: 'card', href: '#/ensenanzas/mis' },
+        h('span', { class: 'card-label' }, 'Enseñanzas'), h('span', { class: 'card-title' }, `${c.sermons}`), h('span', { class: 'card-sub' }, c.sermons ? 'Sus enseñanzas, series y calendario' : 'Traiga sus enseñanzas del Taller')),
       h('a', { class: 'card', href: '#/estudios' },
         h('span', { class: 'card-label' }, 'Mis estudios'), h('span', { class: 'card-title' }, `${c.studies}`), h('span', { class: 'card-sub' }, studies[0] ? `Último: ${studies[0].title}` : 'Aún no ha creado estudios')),
       h('a', { class: 'card', href: '#/cuaderno/notas' },
@@ -39,6 +41,6 @@ export async function renderHome(view) {
     studies.length ? h('section', { class: 'block' }, h('h2', {}, 'Estudios recientes'),
       h('ul', { class: 'list' }, studies.slice(0, 5).map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, s.title), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))))) : null,
     h('section', { class: 'block roadmap-note' }, h('h2', {}, 'En desarrollo'),
-      h('p', {}, 'Esta es la primera versión (núcleo de lectura y estudio). Los módulos de exégesis guiada, hermenéutica, doctrinas, biblioteca de documentos, asistente de IA, taller del predicador, atlas, cronología y personajes se añadirán por fases; no aparecen como botones hasta que funcionen.')),
+      h('p', {}, 'Esta es la primera versión (núcleo de lectura y estudio). Ya incluye sus enseñanzas del Taller del Predicador (etapa 1 de la unión). Los módulos de exégesis guiada, hermenéutica, doctrinas, biblioteca de documentos, asistente de IA, diapositivas, atlas, cronología y personajes se añadirán por fases; no aparecen como botones hasta que funcionen.')),
   );
 }
