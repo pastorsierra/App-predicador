@@ -1,0 +1,11 @@
+# Nunca publicar datos personales ni archivos de pruebas
+escudrinad-respaldo-*.json
+*respaldo*.json
+tests/capturas/
+tests/resultados.json
+.env
+.env.*
+*.pem
+.DS_Store
+node_modules/
+__pycache__/

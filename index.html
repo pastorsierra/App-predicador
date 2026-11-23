@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14274a">
+  <meta name="description" content="Plataforma personal de estudio bíblico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Escudriñad">
+  <title>Escudriñad</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div id="app" class="shell">
+    <nav class="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <div class="brand-name">Escudriñad</div>
+          <div class="brand-sub">Estudio bíblico</div>
+        </div>
+      </div>
+      <ul class="nav" id="nav"></ul>
+      <div class="sidebar-foot" id="sidebar-foot"></div>
+    </nav>
+    <main id="view" class="view" tabindex="-1"></main>
+    <aside id="panel" class="panel" aria-label="Panel de estudio" hidden></aside>
+    <nav class="tabbar" id="tabbar" aria-label="Navegación"></nav>
+  </div>
+  <div id="sheet-backdrop" class="sheet-backdrop" hidden></div>
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript>Esta aplicación necesita JavaScript activado.</noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

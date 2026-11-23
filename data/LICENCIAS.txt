@@ -1,0 +1,19 @@
+Datos bíblicos incluidos en Escudriñad y sus licencias
+=====================================================
+
+rv1909/  Reina-Valera 1909, con números Strong por palabra.
+         Dominio público. Fuente: eBible.org, vía https://github.com/seven1m/open-bibles (spa-rv1909.usfx.xml).
+
+bes/     La Biblia en Español Sencillo.
+         © 2018 AudioBiblia.org / Irma Flores. Licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)
+         https://creativecommons.org/licenses/by/4.0/ — Fuente: https://ebible.org/details.php?id=SPNBES
+         Se puede copiar y redistribuir con reconocimiento a AudioBiblia.org / Irma Flores.
+         Cambios: solo conversión de formato (USFX a JSON); el texto no fue modificado.
+
+xref/    Referencias cruzadas de OpenBible.info. Licencia CC BY. https://www.openbible.info/labs/cross-references/
+         Cambios: filtradas (votos >= 3, máximo 15 por versículo) y convertidas a JSON.
+
+strong/  Diccionario hebreo (1894) y griego (1890) de James Strong: dominio público.
+         Edición digital JSON de Open Scriptures (https://github.com/openscriptures/strongs), CC BY-SA.
+         Cambios: reorganizado en listas y añadida la frecuencia de cada número en la RV1909.
+         Esta carpeta se distribuye bajo la misma licencia CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
