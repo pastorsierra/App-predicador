@@ -10,6 +10,7 @@ import { renderStudies, renderStudy } from './views/studies.js';
 import { renderNotebook } from './views/notebook.js';
 import { renderSettings } from './views/settings.js';
 import { renderAtlas } from './views/atlas.js';
+import { renderDoctrinas, renderDoctrina } from './views/doctrinas.js';
 import { renderEnsenanzas, renderEnsenanza, renderArchivoItem, renderEditor } from './views/ensenanzas.js';
 
 const NAV = [
@@ -53,7 +54,7 @@ async function route() {
   const name = parts[0] || 'inicio';
   const view = document.getElementById('view');
   closePanel();
-  markActive({ estudio: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas' }[name] || name);
+  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas' }[name] || name);
   clear(view);
   view.className = `view view-${name}`;
   try {
@@ -68,6 +69,8 @@ async function route() {
       case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
       case 'archivo': await renderArchivoItem(view, parts[1]); break;
       case 'atlas': await renderAtlas(view, parts[1]); break;
+      case 'doctrinas': await renderDoctrinas(view); break;
+      case 'doctrina': await renderDoctrina(view, parts[1]); break;
       case 'ajustes': await renderSettings(view); break;
       default: view.append(h('div', { class: 'empty' }, 'Página no encontrada.'));
     }

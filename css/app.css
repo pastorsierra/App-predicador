@@ -392,3 +392,13 @@ mark { background: var(--gold-soft); color: inherit; border-bottom: 2px solid va
 .atlas-detail h2 { font-family: var(--read); font-size: 24px; margin-bottom: 2px; }
 .atlas-list a.current strong { color: var(--gold); }
 @media (max-width: 899px) { .atlas { grid-template-columns: 1fr; } .atlas-map { height: 52dvh; } }
+
+/* ---------- Doctrinas ---------- */
+.doc-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.doc-card .card-title.small { font-family: var(--read); font-size: 18px; font-weight: 600; }
+.doc-refs li { gap: 4px; }
+.doc-ref-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.doc-ref-actions { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.doc-ref-actions .link { font-size: 13px; color: var(--muted); }
+.tl-group { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); margin: 14px 0 4px; }
+.doc-sections { max-width: 900px; }

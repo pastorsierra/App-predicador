@@ -39,6 +39,9 @@ Puede limitar la búsqueda a un Testamento o a un libro. También aparecen sus n
 - **Editar o crear:** botón **Editar** o **Nueva**. Use el mismo formato del Taller: `#` título, `## I.` puntos, `>` citas, `**frase de impacto**`, `==resaltado==`.
 - **Series** agrupa sus enseñanzas por serie y **Calendario** muestra las próximas y las ya predicadas.
 
+## Doctrinas
+**Estudios → Doctrinas.** Elija una doctrina (por ejemplo, Bautismo en agua). Puede añadir los pasajes sugeridos y luego los suyos, escribir la definición, el fundamento, las objeciones y respuestas, etc. La app muestra el texto de cada pasaje, el recorrido de la doctrina por toda la Biblia y sus enseñanzas que citan esos textos. También puede crear doctrinas o temas propios.
+
 ## Mis Biblias
 En **Ajustes → Mis Biblias** toque **Traer del Taller en este equipo** (o **Cargar archivo (.json)**) para usar las mismas versiones que tiene en el Taller, como la RVR1960. Luego, en la Biblia, elija la versión en el selector junto al capítulo. Para comparar, toque un versículo → **Comparar**, o en **T (Opciones de lectura)** active **Comparar con otra versión**.
 

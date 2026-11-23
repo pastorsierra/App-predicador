@@ -224,3 +224,32 @@ Prueba `tests/conexion.mjs` (GitHub simulado; datos ficticios).
 | Traer ahora desde Ajustes (no duplica) | Listo: 0 enseñanzas nuevas, 0 actualizadas. | OK |
 | Clave escrita aquí se usa y no va en el respaldo | clave propia usada; el respaldo no la contiene | OK |
 | Errores de consola | 0 errores | OK |
+
+## Doctrinas (versión 0.5.0, 23 nov 2026)
+
+Prueba `tests/doctrinas.mjs`.
+
+**Resultado: 20/20 correctas.** Regresión: 52/52 generales, 35/35 Enseñanzas, 29/29 Biblias y Atlas, 6/6 conexión, 7/7 actualización.
+
+| Función | Resultado | Estado |
+|---|---|---|
+| [iPad] Biblioteca doctrinal con las 20 categorías | 20 categorías | OK |
+| [iPad] Pasajes sugeridos con texto bíblico real | 9 pasajes; Hechos 2:38 con su texto | OK |
+| [iPad] Recorrido por la Escritura en orden canónico | nuevo testamento · evangelios → nuevo testamento · historia → nuevo testamento · epístolas paulinas | OK |
+| [iPad] Añadir, mover y quitar pasajes | añadido Juan 3:5, movido Marcos 16:16, quitado Colosenses 2:12; referencia inválida rechazada | OK |
+| [iPad] Guardado de las secciones | persistente (7 principales, 2 complementarios) | OK |
+| [iPad] Enseñanzas relacionadas automáticamente | la enseñanza que cita Hechos 2:38 aparece | OK |
+| [iPad] Exportar doctrina | Doctrina - Bautismo en agua.md | OK |
+| [iPad] Doctrina personal: crear y eliminar | creada y eliminada | OK |
+| [iPad] Las doctrinas van en el respaldo | incluidas | OK |
+| [iPad] Errores de consola | 0 errores | OK |
+| [iPhone] Biblioteca doctrinal con las 20 categorías | 20 categorías | OK |
+| [iPhone] Pasajes sugeridos con texto bíblico real | 9 pasajes; Hechos 2:38 con su texto | OK |
+| [iPhone] Recorrido por la Escritura en orden canónico | nuevo testamento · evangelios → nuevo testamento · historia → nuevo testamento · epístolas paulinas | OK |
+| [iPhone] Añadir, mover y quitar pasajes | añadido Juan 3:5, movido Marcos 16:16, quitado Colosenses 2:12; referencia inválida rechazada | OK |
+| [iPhone] Guardado de las secciones | persistente (7 principales, 2 complementarios) | OK |
+| [iPhone] Enseñanzas relacionadas automáticamente | la enseñanza que cita Hechos 2:38 aparece | OK |
+| [iPhone] Exportar doctrina | Doctrina - Bautismo en agua.md | OK |
+| [iPhone] Doctrina personal: crear y eliminar | creada y eliminada | OK |
+| [iPhone] Las doctrinas van en el respaldo | incluidas | OK |
+| [iPhone] Errores de consola | 0 errores | OK |

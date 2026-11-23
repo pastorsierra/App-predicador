@@ -4,6 +4,7 @@ import { get, put, remove } from '../db.js';
 import { SECTIONS, CLAIMS, buildAuto, createStudy, listStudies, studyToMarkdown } from '../study.js';
 import { hrefFor, strongPanel } from './verse.js';
 import { S, PROFILES } from '../state.js';
+import { studyTabs } from './doctrinas.js';
 
 export async function renderStudies(view) {
   const studies = await listStudies();
@@ -27,7 +28,7 @@ export async function renderStudies(view) {
     if (!shown.length) list.append(h('li', { class: 'empty' }, studies.length ? 'Ningún estudio coincide.' : 'Aún no hay estudios. Escriba un pasaje arriba, o seleccione un versículo en la Biblia y toque «Estudiar».'));
   };
   filter.addEventListener('input', draw);
-  view.append(h('header', { class: 'page-head' }, h('h1', {}, 'Estudios')), form, msg, studies.length ? filter : null, list);
+  view.append(h('header', { class: 'page-head' }, h('h1', {}, 'Estudios')), studyTabs('pasajes'), form, msg, studies.length ? filter : null, list);
   draw();
 }
 

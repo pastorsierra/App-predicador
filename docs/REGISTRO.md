@@ -3,7 +3,7 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.4.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática con el Taller y versiones PDT y VBL.
+- **Versión:** 0.5.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática con el Taller, versiones PDT y VBL, y biblioteca doctrinal.
 - **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
@@ -39,6 +39,11 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 - La app nunca escribe en los datos del Taller. Las claves quedan solo en el dispositivo y se excluyen de los respaldos.
 - **La RVR1960 no se puede añadir desde aquí:** el archivo solo existe dentro del Taller en el iPad del usuario (no está en ningún repositorio) y tiene derechos de autor. Llega a la app automáticamente desde el Taller del mismo equipo o cargando el .json.
 - Versiones libres añadidas: Palabra de Dios para ti (PDT) y Versión Biblia Libre (VBL), CC BY-SA 4.0.
+
+## Doctrinas (v0.5.0)
+- Biblioteca doctrinal (Módulo 5) dentro de **Estudios → Doctrinas**: las 20 categorías del plan y doctrinas personales. Cada una con 13 secciones que redacta el usuario, pasajes principales y complementarios con su texto real, recorrido automático por la Escritura (orden canónico, AT → NT) y enseñanzas propias relacionadas (las que citan esos pasajes o nombran el tema).
+- La app no redacta doctrina. Para 8 categorías ofrece «pasajes sugeridos»: referencias verificadas contra la RV1909, que el usuario puede quitar o cambiar.
+- Pendiente del plan (siguiente): exégesis guiada y hermenéutica (con evaluación de una interpretación), taller del predicador propio (bosquejos, series, diapositivas), personajes, cronología, biblioteca de PDF, asistente de IA.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |
