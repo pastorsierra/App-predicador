@@ -6,7 +6,8 @@ import { BOOK } from './books.js';
 import { getChapter, plain, segments, strongEntry, loadXref, manifest, verseCount } from './bible.js';
 import { label, splitKey } from './ref.js';
 import { put, get, all, uid, touchHistory } from './db.js';
-import { listBibles } from './bibles.js';
+import { allVersions } from './bible.js';
+import { S } from './state.js';
 
 export const SECTIONS = [
   ['texto', 'Texto bíblico', 'auto', 'Texto del pasaje en las versiones disponibles.'],
@@ -33,6 +34,28 @@ export const SECTIONS = [
   ['fuentes', 'Fuentes consultadas', 'auto-user', 'Recursos usados. Añada libros o comentarios con autor, título y página.'],
 ].map(([id, title, mode, hint], i) => ({ id, n: i + 1, title, mode, hint }));
 
+// Módulo 3 — Exégesis guiada: plantilla propia
+export const EXEGESIS = [
+  ['texto', 'Texto bíblico', 'auto', 'Texto del pasaje.'],
+  ['traducciones', 'Comparación de traducciones', 'auto', 'Cada versículo en todas las versiones disponibles. Fíjese dónde difieren: allí suele haber una decisión de traducción que conviene estudiar.'],
+  ['inmediato', 'Contexto inmediato', 'auto', 'Versículos anteriores y posteriores.'],
+  ['historico', 'Contexto histórico', 'user', 'Situación del autor y de los destinatarios. Anote la fuente de cada dato.'],
+  ['literario', 'Contexto literario y género', 'user', 'Género del libro y del pasaje; lugar que ocupa en el argumento del libro.'],
+  ['gramatical', 'Contexto gramatical', 'user', 'Verbos (tiempo, modo, quién actúa), conectores (porque, pues, pero, por tanto), sujetos y complementos.'],
+  ['estructura', 'Estructura del pasaje', 'user', 'Divisiones, repeticiones, contrastes y progresión.'],
+  ['palabras', 'Palabras importantes (análisis léxico)', 'auto', 'Palabras con número Strong. El sentido de cada palabra lo decide su contexto, no todos sus significados posibles.'],
+  ['versiculos', 'Análisis versículo por versículo', 'auto-user', 'Observaciones sobre cada versículo.'],
+  ['referencias', 'Relación con otros pasajes', 'auto', 'Pasajes relacionados. Verifique cada relación en su propio contexto.'],
+  ['argumento', 'Argumento del autor', 'user', '¿Qué quiere lograr el autor con este pasaje? Resúmalo en una frase.'],
+  ['interpretaciones', 'Interpretaciones', 'user', 'Exponga las interpretaciones posibles y en qué se apoya cada una. Marque como «Opinión de comentarista» lo que venga de otros autores.'],
+  ['conclusiones', 'Conclusiones exegéticas', 'user', 'Qué afirma el texto, con qué grado de certeza.'],
+  ['aplicaciones', 'Aplicaciones derivadas del texto', 'user', 'Solo las que se siguen del sentido del texto.'],
+  ['fuentes', 'Fuentes consultadas', 'auto-user', 'Recursos usados. Añada libros o comentarios con autor, título y página.'],
+].map(([id, title, mode, hint], i) => ({ id, n: i + 1, title, mode, hint }));
+
+export const KINDS = { pasaje: { name: 'Estudio de pasaje', sections: SECTIONS }, exegesis: { name: 'Exégesis guiada', sections: EXEGESIS } };
+export const sectionsFor = (study) => (KINDS[study.kind] || KINDS.pasaje).sections;
+
 // Categorías de afirmación (Módulo 3): para marcar cada observación del usuario
 export const CLAIMS = [
   ['texto', 'Afirmación del texto'], ['inferencia', 'Inferencia'], ['interpretacion', 'Interpretación'],
@@ -48,11 +71,15 @@ export async function buildAuto(passageKey) {
   try { bes = await getChapter('bes', r.book, r.ch); } catch (e) { bes = []; }
   const verses = [];
   for (let v = v1; v <= v2; v++) verses.push({ v, rv: plain(rv[v - 1]), bes: bes[v - 1] || '' });
-  // Biblias personales del usuario (p. ej. RVR1960), solo si están en este equipo
-  const others = [];
-  for (const b of await listBibles()) {
-    try { const c = await getChapter(b.code, r.book, r.ch); others.push({ abbr: b.abbr, verses: verses.map(x => ({ v: x.v, t: plain(c[x.v - 1]) })) }); } catch (e) { /* no disponible */ }
+  // Todas las traducciones disponibles (incluidas las Biblias personales del usuario, solo si están en este equipo)
+  const hidden = new Set(S.compareHide || []);
+  const translations = [];
+  for (const x of await allVersions()) {
+    if (x.code === 'rv1909' || hidden.has(x.code)) continue;
+    try { const c = x.code === 'bes' ? bes : await getChapter(x.code, r.book, r.ch); translations.push({ code: x.code, abbr: x.abbr, own: x.own, verses: verses.map(y => ({ v: y.v, t: plain(c[y.v - 1]) })) }); } catch (e) { /* no disponible */ }
   }
+  // En «Texto bíblico» se muestra además la versión principal del usuario (si no es la RV1909 ni la BES)
+  const others = translations.filter(t => t.code === S.version && t.code !== 'bes');
 
   // Contexto inmediato: hasta 5 versículos antes y después dentro del capítulo
   const before = [], after = [];
@@ -94,19 +121,20 @@ export async function buildAuto(passageKey) {
     'Diccionarios hebreo (1894) y griego (1890) de James Strong — dominio público; edición digital de Open Scriptures (CC BY-SA).',
     `${m.xref.name} — ${m.xref.license}.`,
   ];
-  if (others.length) sources.push(`Biblias personales del usuario (solo en su equipo): ${others.map(o => o.abbr).join(', ')}.`);
-  return { v1, v2, verses, others, before, after, words: wordList, xrefs, sources };
+  const own = translations.filter(t => t.own);
+  if (own.length) sources.push(`Biblias personales del usuario (solo en su equipo): ${own.map(o => o.abbr).join(', ')}.`);
+  return { v1, v2, verses, others, translations, before, after, words: wordList, xrefs, sources };
 }
 
-export async function createStudy(passageKey, title) {
+export async function createStudy(passageKey, title, kind = 'pasaje') {
   const r = splitKey(passageKey);
   const key = r.v ? passageKey : `${r.book}.${r.ch}.1-${verseCount(r.book, r.ch)}`;
   const auto = await buildAuto(key);
   const sections = {};
-  for (const s of SECTIONS) sections[s.id] = { text: '', claims: [] };
+  for (const s of (KINDS[kind] || KINDS.pasaje).sections) sections[s.id] = { text: '', claims: [] };
   auto.verses.forEach(x => { sections.versiculos[`v${x.v}`] = ''; });
   const rec = await put('studies', {
-    id: uid(), kind: 'pasaje', title: title || `Estudio de ${label(key)}`,
+    id: uid(), kind, title: title || `${kind === 'exegesis' ? 'Exégesis' : 'Estudio'} de ${label(key)}`,
     passage: key, passageLabel: label(key), book: r.book, tags: [], status: 'borrador',
     doctrinalProfile: null, sections, related: [],
   });
@@ -122,7 +150,7 @@ export async function addPassageToStudy(studyId, key) {
 }
 
 export async function listStudies() {
-  return (await all('studies')).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return (await all('studies')).filter(s => s.kind !== 'evaluacion').sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 // Exportación a texto (Markdown) — contenido real del estudio
@@ -131,8 +159,9 @@ export async function studyToMarkdown(study) {
   const L = [];
   L.push(`# ${study.title}`, '', `**Pasaje:** ${study.passageLabel}  `, `**Estado:** ${study.status}  `, `**Actualizado:** ${new Date(study.updatedAt).toLocaleString('es-CO')}`, '');
   if (study.tags?.length) L.push(`**Etiquetas:** ${study.tags.join(', ')}`, '');
-  for (const s of SECTIONS) {
+  for (const s of sectionsFor(study)) {
     L.push(`## ${s.n}. ${s.title}`, '');
+    if (s.id === 'traducciones') auto.verses.forEach((x, i) => { L.push(`**v. ${x.v}** RV1909: ${x.rv}`); (auto.translations || []).forEach(t => L.push(`- ${t.abbr}: ${t.verses[i].t}`)); L.push(''); });
     if (s.id === 'texto') { auto.verses.forEach(x => L.push(`${x.v} ${x.rv}`)); L.push('', `_(RV1909)_`, ''); if (auto.verses.some(x => x.bes)) { auto.verses.forEach(x => L.push(`${x.v} ${x.bes}`)); L.push('', '_(BES)_', ''); } (auto.others || []).forEach(o => { o.verses.forEach(x => L.push(`${x.v} ${x.t}`)); L.push('', `_(${o.abbr})_`, ''); }); }
     if (s.id === 'inmediato') { if (auto.before.length) L.push('**Antes:** ' + auto.before.map(x => `${x.v} ${x.text}`).join(' '), ''); if (auto.after.length) L.push('**Después:** ' + auto.after.map(x => `${x.v} ${x.text}`).join(' '), ''); }
     if (s.id === 'versiculos') auto.verses.forEach(x => { const t = study.sections.versiculos?.[`v${x.v}`]; L.push(`**v. ${x.v}** — ${x.rv}`, '', t ? t : '_(sin observaciones)_', ''); });

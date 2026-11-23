@@ -402,3 +402,21 @@ mark { background: var(--gold-soft); color: inherit; border-bottom: 2px solid va
 .doc-ref-actions .link { font-size: 13px; color: var(--muted); }
 .tl-group { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); margin: 14px 0 4px; }
 .doc-sections { max-width: 900px; }
+
+.cmp-pick { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
+.trad-v { border-bottom: 1px solid var(--line); padding: 8px 0; }
+.trad-row { margin: 2px 0 2px 18px; font-size: 15.5px; }
+.trad-ab { font: 600 11px var(--ui); color: var(--gold); letter-spacing: .04em; }
+
+/* ---------- Hermenéutica ---------- */
+.herm-acc > summary { cursor: pointer; list-style: none; }
+.herm-acc > summary::-webkit-details-marker { display: none; }
+.herm-acc > summary h2 { display: inline; }
+.herm-acc > summary::after { content: '▾'; float: right; color: var(--muted); }
+.herm-acc[open] > summary::after { content: '▴'; }
+.herm-list li { margin: 10px 0; } .herm-list p { margin: 2px 0 0; color: var(--muted); }
+.herm-gen h3 { font-size: 16px; margin-top: 12px; } .herm-gen p { margin: 2px 0; }
+.herm-q { border-bottom: 1px solid var(--line); padding: 10px 0; display: grid; gap: 6px; }
+.herm-q p { margin: 0; }
+.herm-sum h2 { font-size: 17px; }

@@ -8,6 +8,7 @@ export const DEFAULTS = {
   parallel: false,         // mostrar otra versión al lado
   version: 'rv1909',       // versión principal de lectura (rv1909, bes o u:ABREV de Mis Biblias)
   parallelVer: 'bes',      // versión para comparar en paralelo
+  compareHide: [],         // versiones ocultas en la pestaña Comparar
   verseBreaks: true,       // un versículo por línea (false = párrafo continuo)
   lastPos: { book: 'JHN', ch: 1 },
   doctrinalProfile: 'ipuc',

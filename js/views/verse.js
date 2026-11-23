@@ -185,8 +185,22 @@ async function previewText(k) {
   return t.length > 140 ? t.slice(0, 140) + '…' : t;
 }
 
+async function pickVersions(allV, wrap) {
+  const { setPref } = await import('../state.js');
+  const hidden = new Set(S.compareHide || []);
+  const boxes = allV.map(x => h('label', { class: 'switch-row' }, h('span', {}, h('strong', {}, x.abbr), h('small', {}, x.name)), h('input', { type: 'checkbox', checked: !hidden.has(x.code), 'data-code': x.code })));
+  const r = await modal({ title: 'Versiones para comparar', content: h('div', { class: 'form' }, boxes), actions: [{ label: 'Cancelar', value: null }, { label: 'Guardar', primary: true, value: true }] });
+  if (!r) return;
+  const hide = boxes.map(b => b.querySelector('input')).filter(i => !i.checked).map(i => i.dataset.code);
+  if (hide.length === allV.length) { toast('Deje al menos una versión'); return; }
+  await setPref('compareHide', hide);
+  const tabBtn = document.querySelector('#panel .tabs button[data-tab="comparar"]'); if (tabBtn) tabBtn.click();
+}
+
 async function compareTab(book, ch, sel, chapter) {
-  const vers = await allVersions();
+  const allV = await allVersions();
+  const hidden = new Set(S.compareHide || []);
+  const vers = allV.filter(x => !hidden.has(x.code));
   const chs = {};
   for (const x of vers) { try { chs[x.code] = x.code === 'rv1909' ? chapter : await getChapter(x.code, book, ch); } catch (e) { chs[x.code] = null; } }
   const wrap = h('div', { class: 'compare' });
@@ -195,6 +209,8 @@ async function compareTab(book, ch, sel, chapter) {
       h('div', { class: 'cmp-v' }, `${v}`),
       vers.map(x => h('div', {}, h('div', { class: 'cmp-ver' }, x.abbr), h('p', {}, chs[x.code] ? (plain(chs[x.code][v - 1]) || '(este versículo no existe en esta versión)') : 'No disponible (descargue la versión para usarla sin conexión).')))));
   }
+  wrap.prepend(h('div', { class: 'cmp-pick' }, h('span', { class: 'hint' }, `${vers.length} de ${allV.length} versiones`),
+    h('button', { class: 'btn small ghost', onclick: () => pickVersions(allV, wrap) }, 'Elegir versiones')));
   if (vers.some(x => x.own)) wrap.append(h('p', { class: 'hint' }, 'Las Biblias personales (cargadas por usted) se guardan solo en este equipo y no se publican.'));
   wrap.append(h('p', { class: 'hint' }, 'BES: La Biblia en Español Sencillo, © 2018 AudioBiblia.org / Irma Flores, CC BY 4.0. Es una traducción de lenguaje sencillo; para estudio formal compare con la RV1909 y, cuando sea posible, con el texto original.'));
   return wrap;

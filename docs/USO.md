@@ -39,6 +39,11 @@ Puede limitar la búsqueda a un Testamento o a un libro. También aparecen sus n
 - **Editar o crear:** botón **Editar** o **Nueva**. Use el mismo formato del Taller: `#` título, `## I.` puntos, `>` citas, `**frase de impacto**`, `==resaltado==`.
 - **Series** agrupa sus enseñanzas por serie y **Calendario** muestra las próximas y las ya predicadas.
 
+## Exégesis y Hermenéutica
+- **Exégesis guiada:** en **Estudios**, escriba el pasaje, elija «Exégesis guiada» y toque **Nuevo estudio**. Incluye la comparación del pasaje en todas sus versiones.
+- **Hermenéutica:** **Estudios → Hermenéutica**. Lea los principios, géneros y errores frecuentes, o use **Evaluar una interpretación**: escriba el pasaje y la interpretación, responda las 10 preguntas y vea qué conviene revisar.
+- **Elegir versiones:** al tocar un versículo → **Comparar** → **Elegir versiones**.
+
 ## Doctrinas
 **Estudios → Doctrinas.** Elija una doctrina (por ejemplo, Bautismo en agua). Puede añadir los pasajes sugeridos y luego los suyos, escribir la definición, el fundamento, las objeciones y respuestas, etc. La app muestra el texto de cada pasaje, el recorrido de la doctrina por toda la Biblia y sus enseñanzas que citan esos textos. También puede crear doctrinas o temas propios.
 

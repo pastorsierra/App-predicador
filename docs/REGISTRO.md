@@ -3,7 +3,7 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.5.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática con el Taller, versiones PDT y VBL, y biblioteca doctrinal.
+- **Versión:** 0.6.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada y Hermenéutica.
 - **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
@@ -43,7 +43,13 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 ## Doctrinas (v0.5.0)
 - Biblioteca doctrinal (Módulo 5) dentro de **Estudios → Doctrinas**: las 20 categorías del plan y doctrinas personales. Cada una con 13 secciones que redacta el usuario, pasajes principales y complementarios con su texto real, recorrido automático por la Escritura (orden canónico, AT → NT) y enseñanzas propias relacionadas (las que citan esos pasajes o nombran el tema).
 - La app no redacta doctrina. Para 8 categorías ofrece «pasajes sugeridos»: referencias verificadas contra la RV1909, que el usuario puede quitar o cambiar.
-- Pendiente del plan (siguiente): exégesis guiada y hermenéutica (con evaluación de una interpretación), taller del predicador propio (bosquejos, series, diapositivas), personajes, cronología, biblioteca de PDF, asistente de IA.
+- Pendiente del plan (siguiente): taller del predicador propio (bosquejos, series, diapositivas), personajes, cronología, biblioteca de PDF, asistente de IA.
+
+## Exégesis y Hermenéutica (v0.6.0)
+- **Exégesis guiada** (Módulo 3): nuevo tipo de estudio con 15 secciones propias (contexto gramatical, argumento del autor, interpretaciones, conclusiones exegéticas…) y una sección automática de **comparación de traducciones** con todas las versiones disponibles.
+- **Hermenéutica** (Módulo 4): principios, cómo leer cada género, errores y falacias, criterios de tipología, y la herramienta **Evaluar una interpretación** (texto, contexto, género del libro, pasajes relacionados, 10 preguntas de verificación, resultado con puntos a revisar y conclusión).
+- **Elegir versiones para comparar**: con muchas Biblias, el usuario decide cuáles aparecen.
+- **Biblias del usuario (RVR1960, NVI, NTV, LBLA, NBLA, RVC, RVA-2015, DHH, TLA):** no se pueden publicar en el repositorio público (derechos de autor). Se intentó guardarlas en el repositorio privado `Taller-datos` para que la app las descargara sola, pero ese permiso de escritura fue denegado en esta sesión. Se cargan una vez por equipo en Ajustes → Mis Biblias → Cargar archivo (se pueden elegir las 9 a la vez), o llegan solas desde el Taller del mismo equipo.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |

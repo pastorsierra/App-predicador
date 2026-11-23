@@ -1,7 +1,7 @@
 import { h, clear, icon, toast, modal, fmtDate, confirmDialog, download } from '../ui.js';
 import { parseRef, refToKey, label } from '../ref.js';
 import { get, put, remove } from '../db.js';
-import { SECTIONS, CLAIMS, buildAuto, createStudy, listStudies, studyToMarkdown } from '../study.js';
+import { CLAIMS, KINDS, sectionsFor, buildAuto, createStudy, listStudies, studyToMarkdown } from '../study.js';
 import { hrefFor, strongPanel } from './verse.js';
 import { S, PROFILES } from '../state.js';
 import { studyTabs } from './doctrinas.js';
@@ -9,14 +9,15 @@ import { studyTabs } from './doctrinas.js';
 export async function renderStudies(view) {
   const studies = await listStudies();
   const input = h('input', { type: 'text', placeholder: 'Pasaje a estudiar (ej.: Hch 2:36-41, Jn 1:1-14, Is 9)', 'aria-label': 'Pasaje' });
+  const kindSel = h('select', { 'aria-label': 'Tipo de estudio' }, Object.entries(KINDS).map(([k, v]) => h('option', { value: k }, v.name)));
   const msg = h('p', { class: 'hint' });
   const form = h('form', { class: 'new-study', onsubmit: async (e) => {
     e.preventDefault();
     const r = parseRef(input.value);
     if (!r || !r.ch || r.error) { msg.textContent = r?.error || 'No se reconoció la referencia. Ejemplo: Romanos 10:9-13'; return; }
-    const s = await createStudy(refToKey(r));
+    const s = await createStudy(refToKey(r), null, kindSel.value);
     location.hash = `#/estudio/${s.id}`;
-  } }, input, h('button', { class: 'btn primary', type: 'submit' }, icon('plus', 18), 'Nuevo estudio'));
+  } }, input, kindSel, h('button', { class: 'btn primary', type: 'submit' }, icon('plus', 18), 'Nuevo estudio'));
   const filter = h('input', { type: 'search', placeholder: 'Filtrar estudios', 'aria-label': 'Filtrar' });
   const list = h('ul', { class: 'list study-list' });
   const draw = () => {
@@ -24,7 +25,7 @@ export async function renderStudies(view) {
     clear(list);
     const shown = studies.filter(s => !f || `${s.title} ${s.passageLabel} ${(s.tags || []).join(' ')}`.toLowerCase().includes(f));
     for (const s of shown) list.append(h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, s.title),
-      h('span', {}, `${s.passageLabel} · ${s.status} · ${fmtDate(s.updatedAt)}`), s.tags?.length ? h('span', { class: 'tags' }, s.tags.map(t => h('span', { class: 'tag' }, t))) : null)));
+      h('span', {}, `${(KINDS[s.kind] || KINDS.pasaje).name} · ${s.passageLabel} · ${s.status} · ${fmtDate(s.updatedAt)}`), s.tags?.length ? h('span', { class: 'tags' }, s.tags.map(t => h('span', { class: 'tag' }, t))) : null)));
     if (!shown.length) list.append(h('li', { class: 'empty' }, studies.length ? 'Ningún estudio coincide.' : 'Aún no hay estudios. Escriba un pasaje arriba, o seleccione un versículo en la Biblia y toque «Estudiar».'));
   };
   filter.addEventListener('input', draw);
@@ -76,7 +77,7 @@ export async function renderStudy(view, id) {
       }
     } }, icon('trash', 18), 'Eliminar'));
 
-  const index = h('nav', { class: 'study-index', 'aria-label': 'Secciones' }, SECTIONS.map(s => h('a', { href: `javascript:void(0)`, onclick: () => document.getElementById(`sec-${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, `${s.n}. ${s.title}`)));
+  const index = h('nav', { class: 'study-index', 'aria-label': 'Secciones' }, sectionsFor(study).map(s => h('a', { href: `javascript:void(0)`, onclick: () => document.getElementById(`sec-${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, `${s.n}. ${s.title}`)));
 
   const profile = PROFILES[S.doctrinalProfile] || PROFILES.ninguno;
   view.append(
@@ -85,8 +86,9 @@ export async function renderStudy(view, id) {
       title,
       h('div', { class: 'study-meta' }, h('span', { class: 'passage' }, study.passageLabel), statusSel, tags, status),
       toolbar,
+      h('p', { class: 'eyebrow' }, (KINDS[study.kind] || KINDS.pasaje).name),
       h('p', { class: 'hint' }, `Perfil doctrinal activo: ${profile.name}. `, 'Las secciones marcadas como «automática» se construyen con datos reales de las fuentes integradas; las demás son su trabajo de estudio. Use las etiquetas de afirmación para distinguir texto, inferencia, interpretación, aplicación y opinión.')),
-    h('div', { class: 'study-layout' }, index, h('div', { class: 'study-sections' }, SECTIONS.map(s => section(s, study, auto, save)))),
+    h('div', { class: 'study-layout' }, index, h('div', { class: 'study-sections' }, sectionsFor(study).map(s => section(s, study, auto, save)))),
   );
   if (study.related?.length) {
     view.querySelector('.study-sections').append(h('section', { class: 'sec' }, h('h2', {}, 'Pasajes añadidos a este estudio'),
@@ -129,6 +131,14 @@ function autoContent(id, auto, study, save) {
         h('div', {}, h('div', { class: 'cmp-ver' }, 'RV1909'), h('p', { class: 'bible' }, auto.verses.map(x => [h('sup', {}, x.v), x.rv, ' ']))),
         auto.verses.some(x => x.bes) ? h('div', {}, h('div', { class: 'cmp-ver' }, 'BES'), h('p', { class: 'bible' }, auto.verses.map(x => [h('sup', {}, x.v), x.bes, ' ']))) : null,
         (auto.others || []).map(o => h('div', {}, h('div', { class: 'cmp-ver' }, o.abbr), h('p', { class: 'bible' }, o.verses.map(x => [h('sup', {}, x.v), x.t, ' ']))))));
+  }
+  if (id === 'traducciones') {
+    const tr = auto.translations || [];
+    if (!tr.length) return h('p', { class: 'hint' }, 'Solo hay una versión disponible.');
+    return h('div', { class: 'auto trad' }, auto.verses.map((x, i) => h('div', { class: 'trad-v' },
+      h('p', { class: 'bible' }, h('sup', {}, x.v), h('b', { class: 'trad-ab' }, 'RV1909 '), x.rv),
+      tr.map(t => h('p', { class: 'bible trad-row' }, h('b', { class: 'trad-ab' }, `${t.abbr} `), t.verses[i].t || '—')))),
+      h('p', { class: 'hint' }, 'Puede elegir qué versiones aparecen: toque un versículo en la Biblia → Comparar → Elegir versiones.'));
   }
   if (id === 'inmediato') {
     if (!auto.before.length && !auto.after.length) return h('p', { class: 'hint' }, 'El pasaje abarca todo el capítulo; revise el capítulo anterior y el siguiente.');

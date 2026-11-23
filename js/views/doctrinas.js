@@ -10,8 +10,9 @@ import { hrefFor } from './verse.js';
 
 export function studyTabs(active) {
   return h('nav', { class: 'tabs page-tabs' },
-    h('a', { href: '#/estudios', 'aria-selected': active === 'pasajes' ? 'true' : 'false' }, 'Estudios de pasajes'),
-    h('a', { href: '#/doctrinas', 'aria-selected': active === 'doctrinas' ? 'true' : 'false' }, 'Doctrinas'));
+    h('a', { href: '#/estudios', 'aria-selected': active === 'pasajes' ? 'true' : 'false' }, 'Pasajes y exégesis'),
+    h('a', { href: '#/doctrinas', 'aria-selected': active === 'doctrinas' ? 'true' : 'false' }, 'Doctrinas'),
+    h('a', { href: '#/hermeneutica', 'aria-selected': active === 'hermeneutica' ? 'true' : 'false' }, 'Hermenéutica'));
 }
 
 export async function renderDoctrinas(view) {

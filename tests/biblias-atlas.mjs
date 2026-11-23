@@ -92,8 +92,8 @@ async function run(name, device, full) {
 
   await t('El estudio incluye las Biblias personales', async () => {
     await p.goto(BASE + '#/estudios'); await p.fill('.new-study input', 'Jn 3:16'); await p.click('.new-study .btn.primary');
-    await p.waitForSelector('#sec-texto .cmp-ver >> text=PRUEBA');
-    return 'RV1909, BES, PRUEBA y SEGUNDA en «Texto bíblico»';
+    await p.waitForSelector('#sec-texto .cmp-ver >> text=SEGUNDA'); // versión principal en ese momento
+    return 'la versión principal (SEGUNDA) aparece en «Texto bíblico» junto a la RV1909 y la BES';
   });
 
   await t('Las Biblias personales no van en el respaldo', async () => {

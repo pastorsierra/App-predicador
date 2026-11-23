@@ -253,3 +253,30 @@ Prueba `tests/doctrinas.mjs`.
 | [iPhone] Doctrina personal: crear y eliminar | creada y eliminada | OK |
 | [iPhone] Las doctrinas van en el respaldo | incluidas | OK |
 | [iPhone] Errores de consola | 0 errores | OK |
+
+## Exégesis guiada, Hermenéutica y elegir versiones (versión 0.6.0, 23 nov 2026)
+
+Prueba `tests/exegesis-hermeneutica.mjs`.
+
+**Resultado: 16/16 correctas.** Regresión: 52/52, 35/35, 29/29, 6/6, 20/20 y 7/7.
+
+Además se comprobó (solo en el entorno de pruebas, sin publicar) que las 9 Biblias personales enviadas por el usuario (RVR1960, NVI, NTV, LBLA, NBLA, RVC, RVA-2015, DHH, TLA) se cargan en 1 segundo desde Ajustes → Mis Biblias, y funcionan para leer, comparar (13 versiones) y buscar.
+
+| Función | Resultado | Estado |
+|---|---|---|
+| [iPad] Crear una exégesis guiada | 15 secciones; comparación con RV1909, BES, PDT y VBL | OK |
+| [iPad] La exégesis se guarda y se exporta | Exegesis de Romanos 6.3-4.md | OK |
+| [iPad] La lista distingue el tipo de estudio | Exégesis guiada · Romanos 6:3-4 | OK |
+| [iPad] Elegir versiones para comparar | RV1909, BES, VBL | OK |
+| [iPad] Centro de hermenéutica | principios, géneros, falacias y tipología | OK |
+| [iPad] Evaluar una interpretación | 10 preguntas; resultado persistente con 2 puntos a revisar | OK |
+| [iPad] Las evaluaciones no se mezclan con los estudios | solo en Hermenéutica | OK |
+| [iPad] Errores de consola | 0 errores | OK |
+| [iPhone] Crear una exégesis guiada | 15 secciones; comparación con RV1909, BES, PDT y VBL | OK |
+| [iPhone] La exégesis se guarda y se exporta | Exegesis de Romanos 6.3-4.md | OK |
+| [iPhone] La lista distingue el tipo de estudio | Exégesis guiada · Romanos 6:3-4 | OK |
+| [iPhone] Elegir versiones para comparar | RV1909, BES, VBL | OK |
+| [iPhone] Centro de hermenéutica | principios, géneros, falacias y tipología | OK |
+| [iPhone] Evaluar una interpretación | 10 preguntas; resultado persistente con 2 puntos a revisar | OK |
+| [iPhone] Las evaluaciones no se mezclan con los estudios | solo en Hermenéutica | OK |
+| [iPhone] Errores de consola | 0 errores | OK |
