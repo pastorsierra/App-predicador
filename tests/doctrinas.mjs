@@ -50,12 +50,11 @@ async function run(name, device) {
     const n = await p.locator('#sec-principal .doc-refs li').count(); if (n !== 7) throw new Error(n + ' principales');
     return 'persistente (7 principales, 2 complementarios)';
   });
-  await t('Enseñanzas relacionadas automáticamente', async () => {
-    await p.goto(BASE + '#/ensenanza/nueva'); await p.waitForSelector('.md-editor');
-    await p.fill('.ens-form input[aria-label="Título"]', 'PRUEBA bautismo'); await p.fill('.md-editor', '# PRUEBA\n\n> Hechos 2:38 — texto');
-    await p.click('.ens-form .btn.primary'); await p.waitForURL(/#\/ensenanza\/(?!nueva)[^/]+$/); await p.waitForSelector('.ens-page .pg');
+  await t('Mensajes relacionados automáticamente', async () => {
+    await p.evaluate(async () => { const db = await import('./js/db.js'); await db.put('sermons', { id: 'prueba-bautismo', titulo: 'PRUEBA bautismo', texto: '', ensenanza: '# PRUEBA\n\n> Hechos 2:38 — texto' }); });
+    await p.goto(BASE + '#/doctrinas'); await p.waitForSelector('.doc-card');
     await p.goto(BASE + '#/doctrina/bautismo-agua'); await p.waitForSelector('#sec-ensenanzas .list a strong >> text=PRUEBA bautismo');
-    return 'la enseñanza que cita Hechos 2:38 aparece';
+    return 'el mensaje que cita Hechos 2:38 aparece';
   });
   await t('Exportar doctrina', async () => {
     const [dl] = await Promise.all([p.waitForEvent('download'), p.locator('.study-tools button', { hasText: 'Exportar texto' }).click()]);

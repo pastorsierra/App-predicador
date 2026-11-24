@@ -101,21 +101,21 @@ export async function renderDoctrina(view, id) {
     tlBody.append(h('p', { class: 'hint' }, `Texto: ${verLabel(ver)}.`));
   };
 
-  // Enseñanzas propias que citan alguno de estos pasajes o mencionan el tema
-  const related = h('section', { class: 'sec', id: 'sec-ensenanzas' }, h('header', {}, h('h2', {}, 'Sus enseñanzas sobre este tema'), h('span', { class: 'badge' }, 'automática')));
+  // Mensajes propios que citan alguno de estos pasajes o mencionan el tema
+  const related = h('section', { class: 'sec', id: 'sec-ensenanzas' }, h('header', {}, h('h2', {}, 'Sus mensajes sobre este tema'), h('span', { class: 'badge' }, 'automática')));
   const relBody = h('div', {}); related.append(relBody);
   const drawRelated = async () => {
     clear(relBody);
-    const sermons = await all('sermons');
+    const sermons = (await (await import('./mensajes.js')).allMessages()).list;
     const labels = [...new Set([...d.principal, ...d.complementary])].map(k => [label(k), label(k, true)]).flat().map(s => s.toLowerCase());
     const title = d.title.toLowerCase();
     const hits = sermons.map(s => {
-      const txt = `${s.titulo || ''} ${s.texto || ''} ${s.ensenanza || ''}`.toLowerCase();
+      const txt = `${s.title} ${s.ref} ${s.md}`.toLowerCase();
       const refs = labels.filter(l => txt.includes(l)).length; const byTitle = txt.includes(title) ? 1 : 0;
       return { s, score: refs * 2 + byTitle * 3 };
     }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 15);
-    if (!hits.length) { relBody.append(h('p', { class: 'hint' }, sermons.length ? 'Ninguna de sus enseñanzas cita estos pasajes o menciona el tema por su nombre.' : 'Cuando sus enseñanzas estén en la app, aquí aparecerán las que citan estos pasajes.')); return; }
-    relBody.append(h('ul', { class: 'list compact' }, hits.map(({ s }) => h('li', {}, h('a', { href: `#/ensenanza/${encodeURIComponent(s.id)}` }, h('strong', {}, s.titulo || 'Sin título'), h('span', {}, s.texto || ''))))));
+    if (!hits.length) { relBody.append(h('p', { class: 'hint' }, sermons.length ? 'Ninguno de sus mensajes cita estos pasajes o menciona el tema por su nombre.' : 'Cuando traiga sus mensajes del Taller (Biblioteca → Mis mensajes), aquí aparecerán los que citan estos pasajes.')); return; }
+    relBody.append(h('ul', { class: 'list compact' }, hits.map(({ s }) => h('li', {}, h('a', { href: `#/mensaje/${s.id}` }, h('strong', {}, s.title), h('span', {}, s.ref || ''))))));
   };
 
   const drawAll = () => { principal._draw(); complementary._draw(); drawTimeline(); drawRelated(); };
@@ -143,7 +143,7 @@ export async function renderDoctrina(view, id) {
         h('button', { class: 'btn ghost small', onclick: () => { document.querySelectorAll('.study-sections textarea').forEach(t => { t.style.height = `${t.scrollHeight + 4}px`; }); window.print(); } }, icon('print', 18), 'Imprimir / PDF'),
         !CATEGORIES.some(c => c[0] === d.id) ? h('button', { class: 'btn ghost small danger', onclick: async () => { if (await confirmDialog('Eliminar doctrina', `¿Eliminar «${d.title}»?`)) { await deleteDoctrine(d.id); location.hash = '#/doctrinas'; } } }, icon('trash', 18), 'Eliminar') : null),
       h('p', { class: 'hint' }, 'Usted redacta la doctrina; los pasajes muestran el texto bíblico real. Distinga siempre lo que el texto dice, lo que se infiere y la formulación doctrinal.')),
-    sugBox,
+    sugBox || '',
     h('div', { class: 'study-sections doc-sections' }, order.map(id => secBy[id]), principal, complementary, timeline, related,
       SECTIONS.filter(s => !order.includes(s.id)).map(s => secBy[s.id])));
   drawAll();

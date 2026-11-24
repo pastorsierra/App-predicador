@@ -21,7 +21,7 @@ const md = (t) => {
 
 export async function renderAsistente(view, params) {
   const cfg = await aiConfig();
-  const headEl = h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, 'Herramientas'), h('h1', {}, 'Asistente de IA')));
+  const headEl = h('header', { class: 'page-head' }, h('div', {}, h('h1', {}, 'Asistente de IA')));
   if (!cfg.ready) {
     view.append(headEl, h('div', { class: 'empty' }, 'El asistente todavía no está conectado. Cuando tenga su clave de Anthropic, siga los pasos de Ajustes → Asistente de IA.'), h('a', { class: 'btn', href: '#/ajustes' }, 'Ir a Ajustes'));
     return;

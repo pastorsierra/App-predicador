@@ -101,7 +101,7 @@ export async function renderSettings(view) {
     e.target.value = '';
   } });
   view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Respaldo y recuperación'),
-    h('p', {}, `En este dispositivo: ${c.sermons} enseñanzas, ${c.notes} notas, ${c.studies} estudios, ${c.favorites} favoritos, ${c.highlights} resaltados, ${c.bookmarks} marcadores.`),
+    h('p', {}, `En este dispositivo: ${c.sermons} mensajes del Taller, ${c.notes} notas, ${c.studies} estudios, ${c.favorites} favoritos, ${c.highlights} resaltados, ${c.bookmarks} marcadores.`),
     h('div', { class: 'btn-row' },
       h('button', { class: 'btn primary', onclick: async () => {
         const data = await exportAll();
@@ -120,7 +120,7 @@ export async function renderSettings(view) {
   const gRepo = h('input', { type: 'text', value: own?.repo || fromTaller?.repo || 'taller-datos', 'aria-label': 'Repositorio privado', autocapitalize: 'off' });
   const gTok = h('input', { type: 'password', value: own?.token || '', placeholder: fromTaller ? 'Se usa la clave que ya tiene el Taller en este equipo' : 'github_pat_…', 'aria-label': 'Clave (token) de GitHub', autocomplete: 'off', autocapitalize: 'off' });
   view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Conexión con el Taller del Predicador'),
-    h('p', {}, 'Al abrir la app se traen solas sus enseñanzas, sus Biblias y la clave del archivo desde el Taller de este equipo y desde su repositorio privado de GitHub. Esta app solo lee: nunca cambia ni borra los datos del Taller.'),
+    h('p', {}, 'Al abrir la app se traen solas sus mensajes, sus Biblias y la clave del archivo desde el Taller de este equipo y desde su repositorio privado de GitHub. Esta app solo lee: nunca cambia ni borra los datos del Taller.'),
     h('p', { class: 'hint' }, fromTaller ? `Conexión del Taller encontrada en este equipo (${fromTaller.owner}/${fromTaller.repo}); se usa automáticamente.` : own ? `Conectada a ${own.owner}/${own.repo}.` : 'En este equipo el Taller no tiene la conexión con GitHub. Puede escribirla aquí (la misma clave que usa en el Taller).',
       lastPull ? ` Última lectura de GitHub: ${new Date(lastPull).toLocaleString('es-CO')}.` : ''),
     h('div', { class: 'form' }, h('div', { class: 'form-row' }, gOwner, gRepo), gTok),
@@ -130,7 +130,7 @@ export async function renderSettings(view) {
         try {
           if (gTok.value.trim()) await SY.saveGithubCfg({ owner: gOwner.value.trim(), repo: gRepo.value.trim(), token: gTok.value.trim() });
           const r = await SY.autoSync({ force: true });
-          gMsg.textContent = `Listo: ${r.nuevas} enseñanzas nuevas, ${r.actualizadas} actualizadas${r.biblias.length ? `, Biblias: ${r.biblias.join(', ')}` : ''}${r.clave ? ', archivo abierto' : ''}.${r.errores.length ? ' Aviso: ' + r.errores.join(' ') : ''}`;
+          gMsg.textContent = `Listo: ${r.nuevas} mensajes nuevos, ${r.actualizadas} actualizados${r.biblias.length ? `, Biblias: ${r.biblias.join(', ')}` : ''}${r.clave ? ', archivo abierto' : ''}.${r.errores.length ? ' Aviso: ' + r.errores.join(' ') : ''}`;
         } catch (err) { gMsg.textContent = err.message; }
         btn.disabled = false;
       } }, 'Traer ahora'),
@@ -139,8 +139,8 @@ export async function renderSettings(view) {
 
   // Enseñanzas: clave del archivo
   const { hasKey, forgetKey } = await import('../taller/store.js');
-  const keyInfo = h('p', {}, (await hasKey()) ? 'El archivo cifrado de enseñanzas está abierto en este equipo.' : 'El archivo cifrado de enseñanzas todavía no se ha abierto en este equipo.');
-  view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Archivo de enseñanzas'), keyInfo,
+  const keyInfo = h('p', {}, (await hasKey()) ? 'El archivo cifrado de mensajes está abierto en este equipo.' : 'El archivo cifrado de mensajes todavía no se ha abierto en este equipo.');
+  view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Archivo de mensajes'), keyInfo,
     h('p', { class: 'hint' }, 'La clave se guarda solo en este equipo; no va en los respaldos ni en GitHub.'),
     (await hasKey()) ? h('button', { class: 'btn small', onclick: async () => { if (await confirmDialog('Cerrar el archivo', '¿Olvidar la clave en este equipo? Tendrá que escribirla otra vez para abrir el archivo.', 'Olvidar clave')) { await forgetKey(); keyInfo.textContent = 'Clave olvidada en este equipo.'; } } }, 'Olvidar la clave en este equipo') : null));
 

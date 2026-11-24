@@ -13,47 +13,52 @@ import { renderAtlas } from './views/atlas.js';
 import { renderBiblioteca, renderDocumento } from './views/biblioteca.js';
 import { renderAsistente } from './views/asistente.js';
 import { getSetting } from './db.js';
+import { parseRef, refToKey } from './ref.js';
+import { TOOLS } from './tools.js';
+import { hrefFor } from './views/verse.js';
 import { renderPersonajes, renderPersonaje, renderCronologia } from './views/personajes.js';
 import { renderDoctrinas, renderDoctrina } from './views/doctrinas.js';
 import { renderHermeneutica, renderEvaluacion } from './views/hermeneutica.js';
-import { renderBosquejo, renderDiapositivas } from './views/predicacion.js';
-import { renderEnsenanzas, renderEnsenanza, renderArchivoItem, renderEditor } from './views/ensenanzas.js';
+import { renderMensajes, renderMensaje } from './views/mensajes.js';
 
-const NAV = [
-  ['inicio', 'Inicio', 'home'],
-  ['biblia', 'Biblia', 'book'],
-  ['ensenanzas', 'Enseñanzas', 'note'],
-  ['estudios', 'Estudios', 'study'],
-  ['buscar', 'Buscar', 'search'],
-  ['cuaderno', 'Cuaderno', 'notebook'],
-  ['biblioteca', 'Biblioteca', 'library'],
-  ['asistente', 'Asistente IA', 'spark'],
-  ['personajes', 'Personajes', 'user'],
-  ['cronologia', 'Cronología', 'clock'],
-  ['atlas', 'Atlas', 'map'],
-  ['ajustes', 'Ajustes', 'settings'],
-];
-
+// Secciones principales (barra superior en iPad, barra inferior en iPhone)
+const NAV = [['biblia', 'Biblia', 'book'], ['estudios', 'Estudios', 'study'], ['biblioteca', 'Biblioteca', 'library'], ['cuaderno', 'Cuaderno', 'notebook']];
+const TABS = [['biblia', 'Biblia', 'book'], ['estudios', 'Estudios', 'study'], ['buscar', 'Buscar', 'search'], ['biblioteca', 'Biblioteca', 'library'], ['cuaderno', 'Cuaderno', 'notebook']];
 export async function buildNav() {
   const aiReady = await getSetting('aiReady', false);
   const nav = document.getElementById('nav');
   const tab = document.getElementById('tabbar');
   clear(nav); clear(tab);
-  for (const [id, name, ic] of NAV) {
-    if (id === 'asistente' && !aiReady) continue; // solo aparece cuando la conexión con el servidor funciona
-    nav.append(h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, icon(ic), h('span', {}, name))));
-    if (!['ajustes', 'atlas', 'personajes', 'cronologia', 'biblioteca', 'asistente'].includes(id)) tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
-  }
+  for (const [id, name] of NAV) nav.append(h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, name)));
+  const det = h('details', { class: 'tools-menu' }, h('summary', {}, 'Herramientas', icon('down', 14)),
+    h('ul', { class: 'menu' }, TOOLS.filter(([id]) => id !== 'asistente' || aiReady).map(([id, n, d]) => h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, n, h('small', {}, d))))));
+  det.addEventListener('click', (e) => { if (e.target.closest('.menu a')) det.open = false; });
+  document.addEventListener('click', (e) => { if (!det.contains(e.target)) det.open = false; });
+  nav.append(h('li', {}, det), h('li', {}, h('a', { href: '#/ajustes', 'data-route': 'ajustes', class: 'icon-only', 'aria-label': 'Ajustes', title: 'Ajustes' }, icon('settings', 20))));
+  for (const [id, name, ic] of TABS) tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
   updateOnline();
 }
 
 function updateOnline() {
-  const foot = document.getElementById('sidebar-foot');
-  clear(foot).append(h('span', { class: `dot ${navigator.onLine ? 'on' : 'off'}` }), navigator.onLine ? 'En línea' : 'Sin conexión');
+  const el = document.getElementById('net');
+  if (navigator.onLine) { clear(el); el.hidden = true; return; }
+  el.hidden = false; clear(el).append(h('span', { class: 'dot off' }), 'Sin conexión');
+}
+
+function wireOmni() {
+  const f = document.getElementById('omni'), q = document.getElementById('omni-q');
+  f.addEventListener('submit', (e) => {
+    e.preventDefault(); const v = q.value.trim(); if (!v) return;
+    const r = parseRef(v);
+    if (r && r.ch && !r.error) location.hash = r.v ? hrefFor(refToKey(r)) : `#/biblia/${r.book}/${r.ch}`;
+    else location.hash = `#/buscar?q=${encodeURIComponent(v)}`;
+    q.value = ''; q.blur();
+  });
 }
 
 function markActive(route) {
   document.querySelectorAll('[data-route]').forEach(a => a.classList.toggle('active', a.dataset.route === route));
+  const tm = document.querySelector('.tools-menu'); if (tm) tm.classList.toggle('active', !!tm.querySelector('a.active'));
 }
 
 export function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
@@ -66,7 +71,7 @@ async function route() {
   const name = parts[0] || 'inicio';
   const host = document.getElementById('view');
   closePanel();
-  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas', personaje: 'personajes', documento: 'biblioteca' }[name] || name);
+  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', personaje: 'personajes', documento: 'biblioteca', mensajes: 'biblioteca', mensaje: 'biblioteca' }[name] || name);
   clear(host);
   host.className = `view view-${name}`;
   // Cada pantalla se dibuja en su propio contenedor: si el usuario cambia de pantalla antes de que la
@@ -81,9 +86,8 @@ async function route() {
       case 'estudios': await renderStudies(view); break;
       case 'estudio': await renderStudy(view, parts[1]); break;
       case 'cuaderno': await renderNotebook(view, parts[1] || 'notas'); break;
-      case 'ensenanzas': await renderEnsenanzas(view, parts[1] || 'mis'); break;
-      case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
-      case 'archivo': await renderArchivoItem(view, parts[1]); break;
+      case 'mensajes': await renderMensajes(view); break;
+      case 'mensaje': await renderMensaje(view, parts[1], parts.slice(2).join('/'), params); break;
       case 'atlas': await renderAtlas(view, parts[1]); break;
       case 'biblioteca': await renderBiblioteca(view, params); break;
       case 'asistente': await renderAsistente(view, params); break;
@@ -94,8 +98,6 @@ async function route() {
       case 'doctrinas': await renderDoctrinas(view); break;
       case 'doctrina': await renderDoctrina(view, parts[1]); break;
       case 'hermeneutica': await renderHermeneutica(view); break;
-      case 'bosquejo': await renderBosquejo(view, parts[1]); break;
-      case 'diapositivas': await renderDiapositivas(view, parts[1]); break;
       case 'evaluacion': await renderEvaluacion(view, parts[1]); break;
       case 'ajustes': await renderSettings(view); break;
       default: view.append(h('div', { class: 'empty' }, 'Página no encontrada.'));
@@ -118,6 +120,7 @@ async function start() {
     return;
   }
   await buildNav();
+  wireOmni();
   window.addEventListener('hashchange', route);
   window.addEventListener('online', () => { updateOnline(); toast('Conexión restablecida'); });
   window.addEventListener('offline', () => { updateOnline(); toast('Sin conexión: se usan los textos descargados'); });
@@ -127,10 +130,10 @@ async function start() {
   import('./taller/sync.js').then(m => m.autoSync()).then(r => {
     if (!r) return;
     const parts = [];
-    if (r.nuevas || r.actualizadas) parts.push(`${r.nuevas} enseñanzas nuevas y ${r.actualizadas} actualizadas`);
+    if (r.nuevas || r.actualizadas) parts.push(`${r.nuevas} mensajes nuevos y ${r.actualizadas} actualizados`);
     if (r.biblias.length) parts.push(`Biblias: ${r.biblias.join(', ')}`);
-    if (r.clave) parts.push('archivo de enseñanzas abierto');
-    if (parts.length) { toast(`Traído del Taller: ${parts.join(' · ')}`); if ((/^#\/(inicio|ensenanzas)(\/(mis|series|calendario))?$/.test(location.hash) || !location.hash || location.hash === '#/') && !document.querySelector('.modal-wrap')) route(); }
+    if (r.clave) parts.push('archivo de mensajes abierto');
+    if (parts.length) { toast(`Traído del Taller: ${parts.join(' · ')}`); if ((/^#\/(inicio|mensajes)$/.test(location.hash) || !location.hash || location.hash === '#/') && !document.querySelector('.modal-wrap')) route(); }
   }).catch(e => console.warn('Sincronización con el Taller', e));
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     try {

@@ -120,7 +120,7 @@ export async function renderEvaluacion(view, id) {
   const concl = h('textarea', { rows: 4, placeholder: 'Su conclusión: ¿la interpretación se sostiene, se debe matizar o se descarta? ¿Por qué?', 'aria-label': 'Conclusión', oninput: (e) => { ev.conclusion = e.target.value; save(); } }); concl.value = ev.conclusion || '';
   const genre = GENRE_OF_GROUP[b.group] || b.group;
   view.append(h('header', { class: 'study-head' }, h('a', { class: 'back', href: '#/hermeneutica' }, icon('left', 18), 'Hermenéutica'),
-    h('p', { class: 'eyebrow' }, 'Evaluación de una interpretación'), h('h1', { class: 'ens-title' }, ev.passageLabel),
+    h('h1', { class: 'ens-title' }, ev.passageLabel),
     h('div', { class: 'study-meta' }, status, h('a', { class: 'btn ghost small', href: hrefFor(ev.passage) }, icon('book', 16), 'Abrir en la Biblia'),
       h('button', { class: 'btn ghost small danger', onclick: async () => { if (await confirmDialog('Eliminar evaluación', '¿Eliminar esta evaluación?')) { await remove('studies', ev.id); location.hash = '#/hermeneutica'; } } }, icon('trash', 16), 'Eliminar'))),
     h('div', { class: 'study-sections' },

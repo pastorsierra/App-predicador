@@ -21,7 +21,7 @@ const errors = []; p.on('pageerror', e => errors.push(String(e)));
 const t = async (n, fn) => { try { rec(n, true, (await fn()) || 'correcto'); } catch (e) { rec(n, false, e.message.split('\n')[0]); await p.screenshot({ path: `/tmp/cx-fallo-${results.length}.png` }).catch(() => {}); } };
 
 await t('Traer solo al abrir (Taller en el mismo equipo + GitHub)', async () => {
-  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.hero-search');
+  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.desk');
   await p.evaluate(async ({ S1, books }) => {
     await new Promise((res, rej) => { const r = indexedDB.open('taller-predicador', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv');
       r.onsuccess = () => { const tx = r.result.transaction('kv', 'readwrite'); const st = tx.objectStore('kv');
@@ -31,7 +31,7 @@ await t('Traer solo al abrir (Taller en el mismo equipo + GitHub)', async () => 
   }, { S1, books });
   await p.reload(); await p.waitForSelector('.toast.show >> text=Traído del Taller', { timeout: 40000 });
   const msg = await p.locator('.toast').innerText();
-  await p.goto(BASE + '#/ensenanzas/mis'); await p.waitForSelector('.list a strong >> text=PRUEBA Automática'); await p.waitForSelector('.list a strong >> text=PRUEBA desde GitHub');
+  await p.goto(BASE + '#/mensajes'); await p.waitForSelector('.list a strong >> text=PRUEBA Automática'); await p.waitForSelector('.list a strong >> text=PRUEBA desde GitHub');
   if (authSeen !== 'Bearer TOKEN-DE-PRUEBA') throw new Error('no usó la clave del Taller: ' + authSeen);
   return msg;
 });
@@ -53,7 +53,7 @@ await t('Versiones libres nuevas (PDT y VBL) en la comparación', async () => {
 await t('Traer ahora desde Ajustes (no duplica)', async () => {
   await p.goto(BASE + '#/ajustes'); await p.waitForSelector('text=Conexión con el Taller del Predicador');
   await p.locator('button', { hasText: 'Traer ahora' }).click();
-  await p.waitForSelector('text=Listo: 0 enseñanzas nuevas');
+  await p.waitForSelector('text=Listo: 0 mensajes nuevos');
   return await p.locator('section', { hasText: 'Conexión con el Taller' }).locator('p[role=status]').innerText();
 });
 

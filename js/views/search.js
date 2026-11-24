@@ -66,7 +66,7 @@ export async function renderSearch(view, params) {
       if (mine.notes.length || mine.studies.length || mine.sermons.length) {
         out.append(h('section', { class: 'mine' }, h('h2', {}, 'En sus datos'),
           h('ul', { class: 'list' },
-            mine.sermons.slice(0, 30).map(s => h('li', {}, h('a', { href: `#/ensenanza/${encodeURIComponent(s.id)}` }, h('strong', {}, `Enseñanza: ${s.titulo || 'sin título'}`), h('span', {}, s.texto || '')))),
+            mine.sermons.slice(0, 30).map(s => h('li', {}, h('a', { href: `#/mensaje/s/${encodeURIComponent(s.id)}` }, h('strong', {}, `Mensaje: ${s.titulo || 'sin título'}`), h('span', {}, s.texto || '')))),
             mine.studies.map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, `Estudio: ${s.title}`), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))),
             mine.notes.map(n => h('li', {}, h('a', { href: n.ref ? hrefFor(n.ref) : '#/cuaderno/notas' }, h('strong', {}, `Nota: ${n.title || n.refLabel || 'sin título'}`), h('span', {}, (n.body || '').slice(0, 120))))))));
       }

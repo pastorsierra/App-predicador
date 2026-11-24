@@ -8,7 +8,7 @@ import { S } from '../state.js';
 import { loadPeople, person, people, personByEn, who } from '../people.js';
 import { PERIODOS } from '../chronology.js';
 
-const head = (t, sub) => h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, 'Herramientas'), h('h1', {}, t), sub ? h('p', { class: 'hint' }, sub) : null));
+const head = (t, sub) => h('header', { class: 'page-head' }, h('div', {}, h('h1', {}, t), sub ? h('p', { class: 'hint' }, sub) : null));
 const toolTabs = (a) => h('nav', { class: 'tabs page-tabs', 'aria-label': 'Herramientas' },
   [['personajes', 'Personajes'], ['cronologia', 'Cronología'], ['atlas', 'Atlas']].map(([id, n]) => h('a', { href: `#/${id}`, 'aria-selected': id === a ? 'true' : 'false' }, n)));
 const SRC = 'Datos de personas y parentescos: Theographic Bible Metadata (CC BY-SA 4.0), construidos a partir de los nombres propios del texto bíblico. Nombres en español tomados de la Reina-Valera 1909.';

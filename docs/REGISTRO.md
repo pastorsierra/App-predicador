@@ -3,8 +3,8 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.9.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica, Taller del predicador propio (bosquejos y diapositivas), Personajes, Cronología, Biblioteca de documentos y Asistente de IA listo para conectar.
-- **Pruebas:** 254 automáticas correctas (52 generales, 7 de actualización, 35 enseñanzas, 29 Biblias y atlas, 6 conexión, 20 doctrinas, 16 exégesis, 18 predicación, 20 personajes, 29 biblioteca, 22 asistente); producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
+- **Versión:** 1.0.0 — 23 nov 2026. Rediseño completo («Piedra y bronce») y enfoque solo en estudio. Antes, 0.9.0: Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica, Taller del predicador propio (bosquejos y diapositivas), Personajes, Cronología, Biblioteca de documentos y Asistente de IA listo para conectar.
+- **Pruebas:** 222 automáticas correctas (52 generales, 7 de actualización, 21 mis mensajes, 29 Biblias y atlas, 6 conexión, 20 doctrinas, 16 exégesis, 20 personajes, 29 biblioteca, 22 asistente); producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
 ## Funciones implementadas (verificadas)
@@ -74,6 +74,13 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 - Función de servidor `supabase/functions/asistente/index.ts`: guarda la clave como secreto, exige `CODIGO_ACCESO`, acepta solo el sitio autorizado, limita el tamaño y los tokens por profundidad, no guarda preguntas ni respuestas; la prueba de conexión no gasta.
 - App: Ajustes → Asistente de IA (dirección + código, solo en el dispositivo, fuera de respaldos). «Asistente IA» en el menú y «Preguntar a la IA» en el panel del versículo aparecen solo cuando la prueba de conexión funciona.
 - Recuperación previa de fuentes reales numeradas (versiones, contexto, referencias, Strong, notas, documentos), 8 modos, 4 profundidades, perfil doctrinal como marco; respuesta marcada como IA con verificación: fuentes inexistentes, citas inexistentes y citas fuera de las fuentes. Guardar en el Cuaderno (etiqueta IA) o copiar.
+
+## Indicación del usuario (23 nov 2026, 10:11 p. m.) — v1.0.0
+El usuario revisó la app y dijo que seguía siendo prácticamente la misma app del Taller; eligió **«Solo estudio»** y señaló como parecido **el diseño visual y todo en general**. Cambios:
+- **Se quitó todo lo que duplicaba el Taller:** sección Enseñanzas (lista, series, calendario, predicadas, editor, lectura con el diseño del Word, descarga en Word), Bosquejos y Diapositivas, «Convertir en bosquejo». Se borraron `js/views/ensenanzas.js`, `js/views/predicacion.js`, `js/outlines.js`, `js/taller/page.js`, `wordgen.js`, `logo.js`, `vendor/docx.js` y `css/taller.css`. Los datos guardados (almacenes `sermons`, `outlines`) no se tocan.
+- **Mis mensajes** pasa a ser material de consulta dentro de **Biblioteca** (`#/mensajes`, `#/mensaje/s/ID` o `#/mensaje/a/ÍNDICE`): solo lectura, búsqueda en el contenido con resaltado, pasajes citados enlazados al lector, copiar referencia y texto. Incluye los mensajes importados y el archivo cifrado (con su versión nueva). Doctrinas y Buscar enlazan aquí.
+- **Por qué no veía sus mensajes:** en iPhone/iPad cada app de la pantalla de inicio tiene su propio almacenamiento, así que la app nueva no puede leer los datos del Taller. Solución: Taller → Ajustes → Descargar copia; aquí → Biblioteca → Mis mensajes → Importar copia del Taller (o escribir el token de GitHub en Ajustes).
+- **Diseño nuevo «Piedra y bronce»** (distinto del Taller, que usa azul marino y dorado con menú lateral): fondo de piedra fría, tinta grafito, un solo acento verde bronce, vino solo para las lenguas originales; Charter para la Escritura y los títulos, Avenir Next para la interfaz; barra superior con «Pasaje o palabra» (va al pasaje o busca), secciones Biblia · Estudios · Biblioteca · Cuaderno y menú Herramientas; Inicio como «mesa de estudio» con el último pasaje tipografiado en grande; listas con líneas finas en vez de tarjetas; temas oscuro y papiro rehechos.
 
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |

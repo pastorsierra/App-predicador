@@ -13,7 +13,7 @@ const ctx = await b.newContext(d); const p = await ctx.newPage(); p.setDefaultTi
 const errors = []; p.on('pageerror', e => errors.push(String(e)));
 const ok = (m) => console.log('OK    ' + m), fail = (m) => { console.log('FALLA ' + m); process.exitCode = 1; };
 try {
-  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.hero-search');
+  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.desk');
   await p.evaluate(() => navigator.serviceWorker.ready);
   await p.reload(); await p.waitForFunction(() => !!navigator.serviceWorker.controller);
   const v1 = (await p.evaluate(() => caches.keys())).filter(k => k.includes('shell'));
@@ -25,12 +25,12 @@ try {
   await p.click('#v1'); await p.locator('#panel .action', { hasText: 'Favorito' }).click(); await p.waitForSelector('#v1.fav');
   // "Publicar" versión nueva
   fs.writeFileSync(SW, original.replace(/const VERSION = '[^']+'/, "const VERSION = 'v9.9.9-prueba'"));
-  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.hero-search');
+  await p.goto(BASE + '#/inicio'); await p.waitForSelector('.desk');
   await p.evaluate(() => navigator.serviceWorker.getRegistration().then(r => r.update()));
   await p.waitForSelector('.toast.show >> text=versión nueva', { timeout: 20000 });
   ok('Aviso mostrado: «Se instaló una versión nueva de la aplicación»');
   await p.waitForEvent('load', { timeout: 10000 }).catch(() => {});
-  await p.waitForSelector('.hero-search');
+  await p.waitForSelector('.desk');
   const keys = await p.evaluate(() => caches.keys());
   if (keys.includes('escudrinad-shell-v9.9.9-prueba') && !keys.some(k => k.startsWith('escudrinad-shell-') && k !== 'escudrinad-shell-v9.9.9-prueba')) ok('Caché nueva instalada y la anterior eliminada: ' + keys.join(', '));
   else fail('Cachés: ' + keys.join(', '));

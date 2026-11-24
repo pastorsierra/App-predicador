@@ -70,7 +70,6 @@ export async function renderStudy(view, id) {
       download(`${study.title.replace(/:/g, '.').replace(/[^\wáéíóúñü.\- ]+/gi, '').trim() || 'estudio'}.md`, md, 'text/markdown');
       toast('Archivo exportado');
     } }, icon('download', 18), 'Exportar texto'),
-    h('button', { class: 'btn ghost small', onclick: async () => { const { outlineFromStudy, saveOutline } = await import('../outlines.js'); const o = outlineFromStudy(study); await saveOutline(o); toast('Bosquejo creado a partir del estudio'); location.hash = `#/bosquejo/${o.id}`; } }, icon('layers', 18), 'Convertir en bosquejo'),
     h('button', { class: 'btn ghost small', onclick: () => { document.querySelectorAll('.study-sections textarea').forEach(t => { t.style.height = `${t.scrollHeight + 4}px`; }); window.print(); } }, icon('print', 18), 'Imprimir / PDF'),
     h('button', { class: 'btn ghost small danger', onclick: async () => {
       if (await confirmDialog('Eliminar estudio', `¿Eliminar «${study.title}»? Puede recuperarlo importando un respaldo anterior.`)) {
@@ -87,7 +86,7 @@ export async function renderStudy(view, id) {
       title,
       h('div', { class: 'study-meta' }, h('span', { class: 'passage' }, study.passageLabel), statusSel, tags, status),
       toolbar,
-      h('p', { class: 'eyebrow' }, (KINDS[study.kind] || KINDS.pasaje).name),
+      h('p', { class: 'hint' }, (KINDS[study.kind] || KINDS.pasaje).name),
       h('p', { class: 'hint' }, `Perfil doctrinal activo: ${profile.name}. `, 'Las secciones marcadas como «automática» se construyen con datos reales de las fuentes integradas; las demás son su trabajo de estudio. Use las etiquetas de afirmación para distinguir texto, inferencia, interpretación, aplicación y opinión.')),
     h('div', { class: 'study-layout' }, index, h('div', { class: 'study-sections' }, sectionsFor(study).map(s => section(s, study, auto, save)))),
   );

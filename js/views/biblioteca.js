@@ -1,5 +1,6 @@
 // Biblioteca: lista de documentos, importación, búsqueda en el texto y lector (PDF con pdf.js, o texto).
 import { h, clear, icon, toast, fmtDate, confirmDialog, modal } from '../ui.js';
+import { libTabs } from './mensajes.js';
 import { label } from '../ref.js';
 import { uid, now } from '../db.js';
 import { hrefFor } from './verse.js';
@@ -58,9 +59,9 @@ export async function renderBiblioteca(view, params, msg = '') {
   };
   let tm; q.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(search, 250); });
 
-  view.append(h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, 'Recursos'), h('h1', {}, 'Biblioteca')),
+  view.append(h('header', { class: 'page-head' }, h('div', {}, h('h1', {}, 'Biblioteca')),
       h('div', { class: 'head-actions' }, h('button', { class: 'btn primary', onclick: () => file.click() }, icon('plus', 18), 'Añadir documentos'), file)),
-    status, h('div', { class: 'toolbar' }, q), tagBar, results, list,
+    libTabs('biblioteca'), status, h('div', { class: 'toolbar' }, q), tagBar, results, list,
     h('p', { class: 'hint' }, 'Los documentos se guardan solo en este dispositivo y no se publican. Al importarlos se extrae su texto para buscar y se detectan las citas bíblicas (por ejemplo «Hch 2:38»). Los PDF escaneados como imagen no tienen texto que buscar. El respaldo guarda la ficha, las etiquetas y las notas, pero no los archivos: en otro equipo hay que volver a añadirlos.'));
   drawList(); if (q.value) search();
 }
@@ -168,7 +169,7 @@ export async function renderDocumento(view, id, page, params) {
   const title = h('h1', {}, d.title);
   const modeBtn = d.kind === 'pdf' ? h('button', { class: 'btn small', onclick: () => { mode = mode === 'pdf' ? 'texto' : 'pdf'; modeBtn.textContent = mode === 'pdf' ? 'Ver como texto' : 'Ver el PDF'; drawPages(); } }, q0 ? 'Ver el PDF' : 'Ver como texto') : null;
   if (q0 && d.kind === 'pdf') mode = 'texto'; // con una búsqueda, el texto muestra las coincidencias resaltadas
-  view.append(h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, h('a', { href: '#/biblioteca' }, 'Biblioteca')), title, d.author ? h('p', { class: 'hint' }, d.author) : null)),
+  view.append(h('header', { class: 'page-head' }, h('div', {}, h('a', { class: 'back', href: '#/biblioteca' }, icon('left', 18), 'Biblioteca'), title, d.author ? h('p', { class: 'hint' }, d.author) : null)),
     h('div', { class: 'doc-bar' }, h('button', { class: 'icon-btn', 'aria-label': 'Página anterior', onclick: () => goPage(cur - 1) }, icon('left')),
       h('span', {}, 'Página ', pageIn, ` de ${d.pageCount}`), h('button', { class: 'icon-btn', 'aria-label': 'Página siguiente', onclick: () => goPage(cur + 1) }, icon('right')), modeBtn),
     h('div', { class: 'doc-layout' }, pagesBox, side));

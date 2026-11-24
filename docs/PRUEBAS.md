@@ -336,3 +336,12 @@ Error corregido:
 | 20 | El aviso «no es un PDF válido» se tapaba con «0 documentos añadidos» | Los errores se muestran en la pantalla y el resumen solo si hubo éxitos |
 | 21 | «En Hch 2:38» no se detectaba (la palabra anterior se tomaba como parte del libro) | Si no hay libro, se prueba con la última palabra |
 | 22 | Prueba de doctrinas inestable: navegaba antes de que terminara de guardarse la enseñanza | La prueba espera la dirección final |
+
+## v1.0.0 — rediseño y enfoque en estudio
+Se retiraron `tests/ensenanzas.mjs` y `tests/predicacion.mjs` (sus funciones ya no existen) y se añadió `tests/mensajes.mjs` (21/21): no quedan pantallas del Taller, guía de importación, importar copia del Taller, abrir el archivo cifrado, búsqueda en el contenido con resaltado, pasajes citados, versión nueva del archivo, doctrinas enlazadas, barra superior (pasaje y búsqueda), menú Herramientas. Regresión: 52/52, 7/7, 6/6, 20/20, 29/29, 16/16, 20/20, 29/29, 22/22.
+
+| # | Error | Corrección |
+|---|---|---|
+| 23 | La barra superior usaba un campo de tipo «search» y las pruebas (y lectores de pantalla) lo confundían con el buscador de cada página | Campo de texto con teclado de búsqueda |
+| 24 | En una doctrina sin pasajes sugeridos aparecía el texto «null» | Se omite el bloque vacío |
+| 25 | El lector de mensajes repetía el título | Se omite el «# Título» inicial cuando coincide |

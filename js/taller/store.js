@@ -6,6 +6,27 @@ import { put, get, all, remove, getSetting, setSetting, now } from '../db.js';
 
 // El archivo se lee del Taller publicado (mismo sitio pastorsierra.github.io), así siempre está actualizado.
 export const ARCHIVE_URLS = { lib: '../Assj/biblioteca.enc', nueva: '../Assj/biblioteca-nueva.enc' };
+// Elementos del archivo cifrado → Markdown (misma conversión que el Taller)
+export function libToMd(it) {
+  if (it.md) return it.md;
+  const L = [`# ${it.T || it.t}`]; let i = 0; const P = it.p || [];
+  if (P[0] && P[0][0] === 'p' && P[0][1] === it.S) { L.push(`*${it.S}*`); i = 1; }
+  let lastLi = false;
+  for (; i < P.length; i++) {
+    const [k, t] = P[i];
+    if (k !== 'li' && lastLi) { L.push(''); lastLi = false; }
+    if (k === 'h' && /^vers[ií]culo clave$/i.test(t.replace(/:$/, ''))) continue;
+    if (k === 'ref') { const nx = P[i + 1]; if (nx && nx[0] === 'q') { L.push(`> ${t} — ${nx[1].replace(/^\((RVR1960|NTV|NVI)\)\s*/, '')}`); i++; } else L.push(`> ${t}`); L.push(''); continue; }
+    if (k === 'q') { L.push(`> ${t}`, ''); continue; }
+    if (k === 'h') { L.push(`## ${t.replace(/:$/, '')}`); continue; }
+    if (k === 'li') { L.push(`- ${t}`); lastLi = true; continue; }
+    if (k === 'i') { L.push('', `**${t.replace(/\*/g, '')}**`, ''); continue; }
+    L.push(t, '');
+  }
+  return L.join('\n');
+}
+
+
 const SALT_HEX = 'e6ad908c3b7d35e42e54362bea50eada', ITER = 310000;
 
 const hex2b = h => new Uint8Array(h.match(/../g).map(x => parseInt(x, 16)));

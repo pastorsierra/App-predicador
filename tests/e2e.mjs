@@ -25,13 +25,13 @@ async function run(profile) {
   };
 
   await t('Carga inicial', 'Se muestra Inicio sin errores', async () => {
-    await page.goto(BASE + '#/inicio'); await page.waitForSelector('.hero-search');
+    await page.goto(BASE + '#/inicio'); await page.waitForSelector('.desk');
     await page.screenshot({ path: `${SHOTS}${P}-inicio.png` });
     return 'Inicio visible';
   });
 
-  await t('Ir a pasaje desde Inicio', 'Jn 3:16 abre Juan 3 con el v. 16 señalado', async () => {
-    await page.fill('.hero-search input', 'Jn 3:16'); await page.press('.hero-search input', 'Enter');
+  await t('Ir a pasaje desde la barra superior', 'Jn 3:16 abre Juan 3 con el v. 16 señalado', async () => {
+    await page.fill('#omni-q', 'Jn 3:16'); await page.press('#omni-q', 'Enter');
     await page.waitForSelector('#v16.target');
     const n = await page.locator('.verse').count();
     if (n !== 36) throw new Error(`Juan 3 debería tener 36 versículos, tiene ${n}`);
@@ -287,7 +287,7 @@ async function run(profile) {
     });
 
     await t('Funcionamiento sin conexión', 'Sin internet: abre la app, lee, busca, crea notas', async () => {
-      await page.goto(BASE + '#/inicio'); await page.waitForSelector('.hero-search');
+      await page.goto(BASE + '#/inicio'); await page.waitForSelector('.desk');
       await page.evaluate(() => navigator.serviceWorker.ready);
       await page.waitForTimeout(500);
       await ctx.setOffline(true);

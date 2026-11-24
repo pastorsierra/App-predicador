@@ -12,7 +12,7 @@ const svgEl = (tag, attrs = {}) => { const e = document.createElementNS(NS, tag)
 let VB = null; // vista del mapa recordada entre pantallas
 
 export async function renderAtlas(view, sel) {
-  view.append(h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, 'Herramientas'), h('h1', {}, 'Atlas bíblico'))),
+  view.append(h('header', { class: 'page-head' }, h('div', {}, h('h1', {}, 'Atlas bíblico'))),
     h('div', { class: 'loading small' }, 'Abriendo el mapa…'));
   const { L, M } = await loadAtlas();
   clear(view);
@@ -99,7 +99,7 @@ export async function renderAtlas(view, sel) {
   tsel.addEventListener('change', () => { drawList(); draw(); });
 
   view.append(
-    h('header', { class: 'page-head' }, h('div', {}, h('p', { class: 'eyebrow' }, 'Herramientas'), h('h1', {}, 'Atlas bíblico'))),
+    h('header', { class: 'page-head' }, h('div', {}, h('h1', {}, 'Atlas bíblico'))),
     h('div', { class: 'atlas' },
       h('div', { class: 'atlas-mapbox' }, svg,
         h('div', { class: 'atlas-ctl' },
