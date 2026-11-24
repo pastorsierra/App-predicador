@@ -313,3 +313,13 @@ Error corregido:
 | # | Error | Corrección |
 |---|---|---|
 | 14 | Al cambiar de pantalla muy rápido, la pantalla anterior podía terminar de dibujarse encima de la nueva | Cada pantalla se dibuja en su propio contenedor; si el usuario ya se fue, se descarta |
+
+## Personajes y Cronología (v0.8.0) — 20/20 correctas
+`node tests/personajes.mjs URL` (iPad Pro 11 y iPhone 13): lista (Dios no aparece como personaje), búsqueda y ficha de Abraham con su familia, versículos con texto real, navegar Isaac → Rebeca/Esaú/Jacob, época enlazada a la cronología, homónimos (28 Zacarías), períodos con rangos y fechas debatidas, enlaces a versículos y personas, pestaña «Personas» del panel, funcionamiento sin conexión, 0 errores. Regresión completa: 52/52, 7/7, 35/35, 29/29, 6/6, 20/20, 16/16, 18/18.
+
+| # | Error | Corrección |
+|---|---|---|
+| 15 | La ficha mostraba el texto «null» antes de la familia | Se filtran los bloques vacíos antes de añadirlos a la pantalla |
+| 16 | «Esposa de Simón» aparecía con el nombre «Simón» y como «esposa» de Pedro | Las personas sin nombre propio se traducen en vez de buscarse en el texto |
+| 17 | El patriarca Jacob figuraba como «Israel» y la cronología enlazaba a otro Jacob | Se nombra «Jacob (Israel)» y la cronología usa el número de persona en los homónimos |
+| 18 | «menciónes» con tilde | Corregido a «menciones» |

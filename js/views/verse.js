@@ -67,7 +67,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
     } })),
     h('button', { class: 'btn small ghost', onclick: async () => { for (const k of keys) await remove('highlights', `hl:${k}`); changed(); } }, 'Quitar'));
 
-  const tabsDef = [['palabras', 'Palabras originales'], ['refs', 'Referencias'], ['comparar', 'Comparar'], ['lugares', 'Lugares'], ['notas', 'Notas']];
+  const tabsDef = [['palabras', 'Palabras originales'], ['refs', 'Referencias'], ['comparar', 'Comparar'], ['lugares', 'Lugares'], ['personas', 'Personas'], ['notas', 'Notas']];
   const tabBody = h('div', { class: 'tab-body' });
   const tabs = h('div', { class: 'tabs', role: 'tablist' }, tabsDef.map(([id, n]) =>
     h('button', { role: 'tab', 'data-tab': id, onclick: () => showTab(id) }, n)));
@@ -80,6 +80,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
         : id === 'refs' ? await refsTab(book, ch, sel)
           : id === 'comparar' ? await compareTab(book, ch, sel, chapter)
             : id === 'lugares' ? await placesTab(book, ch, sel)
+            : id === 'personas' ? await peopleTab(book, ch, sel)
             : await notesTab(book, ch, keys, rangeKey, () => { changed(); showTab('notas'); });
       clear(tabBody).append(content);
     } catch (e) {
@@ -160,6 +161,15 @@ async function refsTab(book, ch, sel) {
   }
   if (!n) wrap.append(h('p', { class: 'hint' }, 'No hay referencias cruzadas registradas para esta selección.'));
   wrap.append(h('p', { class: 'hint' }, 'Fuente: OpenBible.info (CC BY), filtradas por votos. Una referencia indica relación temática o verbal; compruebe siempre el contexto de cada pasaje.'));
+  return wrap;
+}
+
+async function peopleTab(book, ch, sel) {
+  const { peopleForVerse, who } = await import('../people.js');
+  const wrap = h('div', {}); const seen = new Set(); const ul = h('ul', { class: 'list compact' });
+  for (const v of sel) for (const p of await peopleForVerse(book, ch, v)) if (!seen.has(p.id)) { seen.add(p.id); ul.append(h('li', {}, h('a', { href: `#/personaje/${p.id}` }, h('strong', {}, p.n), h('span', {}, [who(p), `${p.k} menciones`].filter(Boolean).join(' · '))))); }
+  wrap.append(seen.size ? ul : h('p', { class: 'hint' }, 'No hay personas registradas para esta selección.'));
+  wrap.append(h('p', { class: 'hint' }, 'Fuente: Theographic Bible Metadata (CC BY-SA 4.0).'));
   return wrap;
 }
 

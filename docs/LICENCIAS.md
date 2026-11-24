@@ -27,6 +27,8 @@ Cada recurso integrado fue verificado antes de incluirse. El aviso de licencias 
 
 ## Atlas
 - `data/atlas/lugares.json`: lugares bíblicos de OpenBible.info (CC BY 4.0), con nombres en español, tomados del Taller del Predicador.
+- `data/personajes/personas.json`: personas y parentescos de Theographic Bible Metadata (Robert Rouse, CC BY-SA 4.0, github.com/robertrouse/theographic-bible-metadata). Adaptación: nombres en español obtenidos de la RV1909 (palabra con mayúscula más frecuente y parecida en los versículos de cada persona; 194 equivalencias estándar fijadas a mano, 41 quedan en inglés), sin Dios ni el Espíritu Santo como «personajes». Se distribuye con la misma licencia CC BY-SA 4.0. Generado con `tools/build_people.py`.
+- Cronología (`js/chronology.js`): períodos y rangos redactados para la app a partir de los datos internos de la Biblia (1 R 6:1, Éx 12:40, Lc 3:1, etc.) y de sincronismos históricos ampliamente aceptados; cada fecha debatida indica las alternativas.
 - `data/atlas/mapa.json`: contornos de Natural Earth (dominio público).
 
 ## Biblias personales

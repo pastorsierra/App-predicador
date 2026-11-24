@@ -35,6 +35,10 @@ export async function renderHome(view) {
         h('span', { class: 'card-label' }, 'Cuaderno'), h('span', { class: 'card-title' }, `${c.notes}`), h('span', { class: 'card-sub' }, `notas · ${c.favorites} favoritos · ${c.highlights} resaltados · ${c.bookmarks} marcadores`)),
       h('a', { class: 'card', href: '#/atlas' },
         h('span', { class: 'card-label' }, 'Atlas bíblico'), h('span', { class: 'card-title small' }, 'Más de mil lugares'), h('span', { class: 'card-sub' }, 'Mapa sin conexión, con los versículos de cada lugar')),
+      h('a', { class: 'card', href: '#/personajes' },
+        h('span', { class: 'card-label' }, 'Personajes'), h('span', { class: 'card-title small' }, 'Más de 3.000 personas'), h('span', { class: 'card-sub' }, 'Familia, genealogía y dónde aparece cada uno')),
+      h('a', { class: 'card', href: '#/cronologia' },
+        h('span', { class: 'card-label' }, 'Cronología'), h('span', { class: 'card-title small' }, 'De los patriarcas a Patmos'), h('span', { class: 'card-sub' }, 'Períodos con fechas aproximadas y sus debates')),
       h('a', { class: 'card', href: '#/ajustes' },
         h('span', { class: 'card-label' }, 'Uso sin conexión'), h('span', { class: 'card-title small' }, off.complete ? 'Biblioteca descargada' : off.supported ? `${off.cachedBooks} de ${off.totalBooks} libros guardados` : 'No disponible en este navegador'),
         h('span', { class: 'card-sub' }, off.complete ? 'Puede leer y buscar sin internet' : 'Descargue los textos desde Ajustes'))),
@@ -43,6 +47,6 @@ export async function renderHome(view) {
     studies.length ? h('section', { class: 'block' }, h('h2', {}, 'Estudios recientes'),
       h('ul', { class: 'list' }, studies.slice(0, 5).map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, s.title), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))))) : null,
     h('section', { class: 'block roadmap-note' }, h('h2', {}, 'En desarrollo'),
-      h('p', {}, 'Esta es la primera versión (núcleo de lectura y estudio). Ya incluye sus enseñanzas del Taller del Predicador (etapa 1 de la unión). Los módulos de exégesis guiada, hermenéutica, doctrinas, biblioteca de documentos, asistente de IA, diapositivas, atlas, cronología y personajes se añadirán por fases; no aparecen como botones hasta que funcionen.')),
+      h('p', {}, 'Ya funcionan: lectura y comparación de versiones, palabras originales, estudios y exégesis, hermenéutica, doctrinas, enseñanzas del Taller, bosquejos y diapositivas, atlas, personajes y cronología. Faltan la biblioteca de documentos PDF, el asistente de IA y la sincronización propia entre equipos; no aparecen como botones hasta que funcionen.')),
   );
 }

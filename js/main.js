@@ -10,6 +10,7 @@ import { renderStudies, renderStudy } from './views/studies.js';
 import { renderNotebook } from './views/notebook.js';
 import { renderSettings } from './views/settings.js';
 import { renderAtlas } from './views/atlas.js';
+import { renderPersonajes, renderPersonaje, renderCronologia } from './views/personajes.js';
 import { renderDoctrinas, renderDoctrina } from './views/doctrinas.js';
 import { renderHermeneutica, renderEvaluacion } from './views/hermeneutica.js';
 import { renderBosquejo, renderDiapositivas } from './views/predicacion.js';
@@ -22,6 +23,8 @@ const NAV = [
   ['estudios', 'Estudios', 'study'],
   ['buscar', 'Buscar', 'search'],
   ['cuaderno', 'Cuaderno', 'notebook'],
+  ['personajes', 'Personajes', 'user'],
+  ['cronologia', 'Cronología', 'clock'],
   ['atlas', 'Atlas', 'map'],
   ['ajustes', 'Ajustes', 'settings'],
 ];
@@ -32,7 +35,7 @@ function buildNav() {
   clear(nav); clear(tab);
   for (const [id, name, ic] of NAV) {
     nav.append(h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, icon(ic), h('span', {}, name))));
-    if (id !== 'ajustes' && id !== 'atlas') tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
+    if (!['ajustes', 'atlas', 'personajes', 'cronologia'].includes(id)) tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
   }
   updateOnline();
 }
@@ -56,7 +59,7 @@ async function route() {
   const name = parts[0] || 'inicio';
   const host = document.getElementById('view');
   closePanel();
-  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas' }[name] || name);
+  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas', personaje: 'personajes' }[name] || name);
   clear(host);
   host.className = `view view-${name}`;
   // Cada pantalla se dibuja en su propio contenedor: si el usuario cambia de pantalla antes de que la
@@ -75,6 +78,9 @@ async function route() {
       case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
       case 'archivo': await renderArchivoItem(view, parts[1]); break;
       case 'atlas': await renderAtlas(view, parts[1]); break;
+      case 'personajes': await renderPersonajes(view); break;
+      case 'personaje': await renderPersonaje(view, parts[1]); break;
+      case 'cronologia': await renderCronologia(view, parts[1]); break;
       case 'doctrinas': await renderDoctrinas(view); break;
       case 'doctrina': await renderDoctrina(view, parts[1]); break;
       case 'hermeneutica': await renderHermeneutica(view); break;

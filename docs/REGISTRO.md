@@ -3,8 +3,8 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.7.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica y Taller del predicador propio (bosquejos y diapositivas).
-- **Pruebas:** 52/52 funcionales y 7/7 de actualización correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
+- **Versión:** 0.8.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica, Taller del predicador propio (bosquejos y diapositivas), Personajes y Cronología.
+- **Pruebas:** 52/52 funcionales, 7/7 de actualización y 20/20 de personajes y cronología (más las suites de cada módulo) correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
 ## Funciones implementadas (verificadas)
@@ -58,6 +58,12 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 - **Convertir un estudio en bosquejo** desde cualquier estudio o exégesis.
 - Pendiente del plan: personajes, cronología, biblioteca de PDF, asistente de IA, sincronización propia y bloqueo con Face ID.
 
+## Personajes y Cronología (v0.8.0)
+- **Personajes** (`#/personajes`, `#/personaje/ID`): 3.066 personas de Theographic Bible Metadata (CC BY-SA 4.0). Búsqueda con o sin tildes, filtro hombres/mujeres, homónimos distinguidos por su padre y primera mención. Ficha: familia (padre, madre, cónyuge, hermanos, hijos, abuelos, nietos) navegable, época en la cronología, versículos con su texto y enlace a Buscar.
+- **Nombres en español**: tomados de la RV1909 (`tools/build_people.py`); 216 fijados a mano (equivalencias como Pedro, Juan, Jacobo, y las personas sin nombre propio: «Esposa de Simón Pedro», «Hija de Faraón»); 29 quedan en inglés por no hallarse en el texto. Dios y el Espíritu Santo no se tratan como «personajes». El patriarca figura como «Jacob (Israel)».
+- **Panel del versículo**: nueva pestaña «Personas».
+- **Cronología** (`#/cronologia/ID`): 25 períodos desde los orígenes (sin fecha fiable) hasta Patmos. Cada uno con rango, aclaración del debate (fecha temprana y tardía del éxodo, 586/587, Esdras 458/398, etc.), textos y personas enlazadas; barra temporal proporcional. Redacción propia basada en datos bíblicos y sincronismos aceptados; no se usan las fechas de Ussher de la fuente como si fueran exactas.
+
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |
 |---|---|---|
@@ -76,8 +82,9 @@ Ver tablas en `PRUEBAS.md` (10 registrados).
 ## Pendiente (por fase)
 Ver `ROADMAP.md`. Lo inmediato:
 1. Publicar en GitHub Pages y revisar en Safari real (lista en `PRUEBAS.md`).
-2. Fase 1b: crear proyecto Supabase → autenticación y sincronización; bloqueo con Face ID; planes de lectura.
-3. Fase 2: exégesis guiada, hermenéutica, biblioteca doctrinal.
+2. Biblioteca de PDF (módulo 7).
+3. Fase 1b: crear proyecto Supabase → autenticación y sincronización; bloqueo con Face ID; planes de lectura.
+4. Fase 4: asistente de IA (requiere clave en un servidor).
 
 ## Requisitos externos que faltan
 | Para | Qué se necesita del usuario |

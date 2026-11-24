@@ -24,3 +24,6 @@ pdt/     Palabra de Dios para ti. © 2017-2022 Asociación Bíblica Latinoameric
 vbl/     Versión Biblia Libre. © 2018-2020 Jonathan Gallagher y Shelly Barrios de Avila. CC BY-SA 4.0
          Fuente: https://ebible.org/details.php?id=SPNVBL — Mismos cambios de formato.
 atlas/   Lugares de OpenBible.info (CC BY 4.0) y mapa de Natural Earth (dominio público).
+personajes/ Personas y parentescos de Theographic Bible Metadata, de Robert Rouse (CC BY-SA 4.0).
+         https://github.com/robertrouse/theographic-bible-metadata — adaptado: nombres en español
+         tomados de la RV1909 y solo los campos de nombre, parentesco y versículos. Se comparte con la misma licencia.

@@ -45,4 +45,4 @@ Requiere: cuenta en la consola de Anthropic y clave de API guardada como secreto
 Editor de sermones y enseñanzas con bosquejo reordenable, plantillas, series, conversión estudio → sermón, exportación a PDF/Word y diapositivas desde el bosquejo.
 
 ## Fase 6 — Herramientas avanzadas ○
-Morfología e interlineal (fuentes candidatas con licencia libre: OpenScriptures Hebrew Bible/morphhb — CC BY; SBL Greek New Testament / MorphGNT — CC BY-SA), búsqueda por raíz, atlas (OpenBible.info geodatos — CC BY, con grado de certeza), cronología con rangos y aclaraciones, personajes y genealogías.
+Morfología e interlineal (fuentes candidatas con licencia libre: OpenScriptures Hebrew Bible/morphhb — CC BY; SBL Greek New Testament / MorphGNT — CC BY-SA), búsqueda por raíz. Hechos: atlas (v0.3.0), cronología con rangos y aclaraciones y personajes con genealogías (v0.8.0).

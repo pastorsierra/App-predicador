@@ -154,7 +154,9 @@ export async function renderSettings(view) {
     h('ul', { class: 'sources' },
       Object.values(m.versions).map(v => h('li', {}, h('strong', {}, v.name), ` — ${v.license}. ${v.verses.toLocaleString('es-CO')} versículos. Fuente: ${v.source}.`)),
       h('li', {}, h('strong', {}, m.xref.name), ` — ${m.xref.license}. ${m.xref.count.toLocaleString('es-CO')} referencias (${m.xref.filter}).`),
-      h('li', {}, h('strong', {}, 'Diccionarios de Strong'), ' — hebreo (1894) y griego (1890), dominio público; edición digital de Open Scriptures (CC BY-SA).')),
+      h('li', {}, h('strong', {}, 'Diccionarios de Strong'), ' — hebreo (1894) y griego (1890), dominio público; edición digital de Open Scriptures (CC BY-SA).'),
+      h('li', {}, h('strong', {}, 'Atlas'), ' — lugares de OpenBible.info (CC BY 4.0); mapa de Natural Earth (dominio público).'),
+      h('li', {}, h('strong', {}, 'Personajes'), ' — Theographic Bible Metadata, de Robert Rouse (CC BY-SA 4.0); nombres en español tomados de la RV1909.')),
     h('p', { class: 'hint' }, h('a', { href: 'data/LICENCIAS.txt', target: '_blank', rel: 'noopener' }, 'Texto completo de las licencias'), '. La RVR1960 y otras versiones comerciales no se incluyen porque tienen derechos de autor; solo podrían añadirse con licencia del titular.')));
 
   const ver = h('p', { class: 'version' }, 'Escudriñad');
