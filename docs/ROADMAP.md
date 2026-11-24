@@ -29,7 +29,7 @@ Requiere: crear proyecto gratuito en Supabase y pegar la URL y la clave pública
 - Bloqueo de la app con Face ID (passkey).
 - Planes de lectura (con progreso sincronizado).
 
-## Fase 2 — Estudio avanzado ○
+## Fase 2 — Estudio avanzado ✔ (v0.5.0–v0.6.0; falta el análisis morfológico por palabra)
 - Exégesis guiada: plantilla con análisis gramatical por palabra (con morfología cuando se integre), argumento del autor, comparación de interpretaciones.
 - Hermenéutica: centro de formación (géneros, figuras, falacias) y herramienta de evaluación de una interpretación (lista de verificación contra el contexto).
 - Doctrinas: biblioteca doctrinal con las categorías iniciales, pasajes principales/complementarios, objeciones y respuestas, desarrollo a lo largo de la Escritura.
@@ -41,8 +41,8 @@ Importar PDF y documentos propios, lector, búsqueda en el texto, etiquetas, not
 ## Fase 4 — Inteligencia artificial ○
 Requiere: cuenta en la consola de Anthropic y clave de API guardada como secreto en Supabase. Asistente con 8 modos y 4 niveles de profundidad, respuestas basadas en recursos recuperados, citas verificadas contra el texto, control doctrinal según el perfil.
 
-## Fase 5 — Taller del predicador ○
+## Fase 5 — Taller del predicador ✔ (v0.7.0)
 Editor de sermones y enseñanzas con bosquejo reordenable, plantillas, series, conversión estudio → sermón, exportación a PDF/Word y diapositivas desde el bosquejo.
 
-## Fase 6 — Herramientas avanzadas ○
+## Fase 6 — Herramientas avanzadas ◐
 Morfología e interlineal (fuentes candidatas con licencia libre: OpenScriptures Hebrew Bible/morphhb — CC BY; SBL Greek New Testament / MorphGNT — CC BY-SA), búsqueda por raíz. Hechos: atlas (v0.3.0), cronología con rangos y aclaraciones y personajes con genealogías (v0.8.0).
