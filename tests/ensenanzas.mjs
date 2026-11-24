@@ -135,7 +135,7 @@ async function run(name, device, full) {
     await p.locator('.seg button', { hasText: 'Versión nueva' }).click();
     await p.waitForSelector('.ens-page .pg >> text=VERSIÓN NUEVA');
     await p.locator('button', { hasText: 'Copiar a Mis enseñanzas' }).click();
-    await p.waitForSelector('.ens-title >> text=PRUEBA: El nombre sobre todo nombre');
+    await p.waitForFunction(() => location.hash.startsWith('#/ensenanza/')); await p.waitForSelector('a.btn >> text=Editar');
     if (!(await p.locator('.ens-page .pg >> text=VERSIÓN NUEVA').count())) throw new Error('no copió la versión elegida');
     return 'original, nueva y copia a Mis enseñanzas';
   });

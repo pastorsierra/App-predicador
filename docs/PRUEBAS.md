@@ -280,3 +280,36 @@ Además se comprobó (solo en el entorno de pruebas, sin publicar) que las 9 Bib
 | [iPhone] Evaluar una interpretación | 10 preguntas; resultado persistente con 2 puntos a revisar | OK |
 | [iPhone] Las evaluaciones no se mezclan con los estudios | solo en Hermenéutica | OK |
 | [iPhone] Errores de consola | 0 errores | OK |
+
+## Taller del predicador propio (versión 0.7.0, 23 nov 2026)
+
+Prueba `tests/predicacion.mjs`.
+
+**Resultado: 18/18 correctas.** Regresión completa: 52/52, 35/35, 29/29, 6/6, 20/20, 16/16 y 7/7 (183 pruebas en total).
+
+| Función | Resultado | Estado |
+|---|---|---|
+| [iPad] Nuevo bosquejo con plantilla de tres puntos | 3 puntos | OK |
+| [iPad] Editar bosquejo: texto base, puntos, subpuntos, citas y frases | guardado: 2 puntos (uno movido y otro eliminado), cita con texto, frases | OK |
+| [iPad] Crear enseñanza desde el bosquejo (formato del Word) | enseñanza creada; PRUEBA El nombre sobre todo nombre (clasico).docx | OK |
+| [iPad] Actualizar la enseñanza no la duplica | 1 sola enseñanza, actualizada | OK |
+| [iPad] Diapositivas | 8 diapositivas; navegación con botones y teclado; temas | OK |
+| [iPad] Duplicar y usar como plantilla | copia creada; plantilla disponible | OK |
+| [iPad] Convertir un estudio en bosquejo | bosquejo con el pasaje y la interpretación del estudio | OK |
+| [iPad] Los bosquejos van en el respaldo | 3 bosquejos respaldados | OK |
+| [iPad] Errores de consola | 0 errores | OK |
+| [iPhone] Nuevo bosquejo con plantilla de tres puntos | 3 puntos | OK |
+| [iPhone] Editar bosquejo: texto base, puntos, subpuntos, citas y frases | guardado: 2 puntos (uno movido y otro eliminado), cita con texto, frases | OK |
+| [iPhone] Crear enseñanza desde el bosquejo (formato del Word) | enseñanza creada; PRUEBA El nombre sobre todo nombre (clasico).docx | OK |
+| [iPhone] Actualizar la enseñanza no la duplica | 1 sola enseñanza, actualizada | OK |
+| [iPhone] Diapositivas | 8 diapositivas; navegación con botones y teclado; temas | OK |
+| [iPhone] Duplicar y usar como plantilla | copia creada; plantilla disponible | OK |
+| [iPhone] Convertir un estudio en bosquejo | bosquejo con el pasaje y la interpretación del estudio | OK |
+| [iPhone] Los bosquejos van en el respaldo | 3 bosquejos respaldados | OK |
+| [iPhone] Errores de consola | 0 errores | OK |
+
+Error corregido:
+
+| # | Error | Corrección |
+|---|---|---|
+| 14 | Al cambiar de pantalla muy rápido, la pantalla anterior podía terminar de dibujarse encima de la nueva | Cada pantalla se dibuja en su propio contenedor; si el usuario ya se fue, se descarta |

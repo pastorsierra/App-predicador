@@ -70,6 +70,7 @@ export async function renderStudy(view, id) {
       download(`${study.title.replace(/:/g, '.').replace(/[^\wáéíóúñü.\- ]+/gi, '').trim() || 'estudio'}.md`, md, 'text/markdown');
       toast('Archivo exportado');
     } }, icon('download', 18), 'Exportar texto'),
+    h('button', { class: 'btn ghost small', onclick: async () => { const { outlineFromStudy, saveOutline } = await import('../outlines.js'); const o = outlineFromStudy(study); await saveOutline(o); toast('Bosquejo creado a partir del estudio'); location.hash = `#/bosquejo/${o.id}`; } }, icon('layers', 18), 'Convertir en bosquejo'),
     h('button', { class: 'btn ghost small', onclick: () => { document.querySelectorAll('.study-sections textarea').forEach(t => { t.style.height = `${t.scrollHeight + 4}px`; }); window.print(); } }, icon('print', 18), 'Imprimir / PDF'),
     h('button', { class: 'btn ghost small danger', onclick: async () => {
       if (await confirmDialog('Eliminar estudio', `¿Eliminar «${study.title}»? Puede recuperarlo importando un respaldo anterior.`)) {

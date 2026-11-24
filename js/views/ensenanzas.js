@@ -5,7 +5,7 @@ import { norm } from '../books.js';
 import { STYLES, ESTADOS, CULTOS, DUR, CATS, catName, pageHTML, libToMd, mdToPlain, fechaHoy } from '../taller/page.js';
 import * as T from '../taller/store.js';
 
-const TABS = [['mis', 'Mis enseñanzas'], ['archivo', 'Mi archivo'], ['series', 'Series'], ['calendario', 'Calendario']];
+const TABS = [['mis', 'Mis enseñanzas'], ['bosquejos', 'Bosquejos'], ['archivo', 'Mi archivo'], ['series', 'Series'], ['calendario', 'Calendario']];
 const hoy = () => new Date().toISOString().slice(0, 10);
 const fmtDia = (d) => { try { return new Date(d + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return d; } };
 
@@ -17,6 +17,7 @@ export async function renderEnsenanzas(view, tab = 'mis') {
   const body = h('div', { class: 'ens-body' });
   view.append(body);
   if (tab === 'mis') await tabMis(body);
+  else if (tab === 'bosquejos') await (await import('./predicacion.js')).tabBosquejos(body);
   else if (tab === 'archivo') await tabArchivo(body);
   else if (tab === 'series') await tabSeries(body);
   else await tabCalendario(body);

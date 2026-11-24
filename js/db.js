@@ -1,9 +1,9 @@
 // Persistencia local real en IndexedDB.
 // Cada registro lleva: id, createdAt, updatedAt, deletedAt (borrado lógico) — listo para sincronizar en la Fase de nube.
 const DB_NAME = 'escudrinad';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 export const SECRET_SETTINGS = ['tallerLibKey', 'githubTaller'];
-export const STORES = ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'history', 'settings', 'sermons', 'doctrines'];
+export const STORES = ['notes', 'highlights', 'favorites', 'bookmarks', 'studies', 'history', 'settings', 'sermons', 'doctrines', 'outlines'];
 
 let dbp = null;
 function open() {
@@ -28,6 +28,7 @@ function open() {
       }
       if (e.oldVersion < 2) mk('sermons', ['updatedAt']); // Enseñanzas (Taller del Predicador)
       if (e.oldVersion < 4) mk('doctrines', ['updatedAt']); // Biblioteca doctrinal
+      if (e.oldVersion < 5) mk('outlines', ['updatedAt']); // Bosquejos (Taller del predicador)
       if (e.oldVersion < 3) mk('bibles'); // Biblias personales del usuario (no se publican ni van en respaldos)
     };
     req.onsuccess = () => resolve(req.result);

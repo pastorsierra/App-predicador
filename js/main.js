@@ -12,6 +12,7 @@ import { renderSettings } from './views/settings.js';
 import { renderAtlas } from './views/atlas.js';
 import { renderDoctrinas, renderDoctrina } from './views/doctrinas.js';
 import { renderHermeneutica, renderEvaluacion } from './views/hermeneutica.js';
+import { renderBosquejo, renderDiapositivas } from './views/predicacion.js';
 import { renderEnsenanzas, renderEnsenanza, renderArchivoItem, renderEditor } from './views/ensenanzas.js';
 
 const NAV = [
@@ -53,11 +54,15 @@ async function route() {
   const parts = path.split('/').filter(Boolean).map(decodeURIComponent);
   const params = new URLSearchParams(query);
   const name = parts[0] || 'inicio';
-  const view = document.getElementById('view');
+  const host = document.getElementById('view');
   closePanel();
-  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas' }[name] || name);
-  clear(view);
-  view.className = `view view-${name}`;
+  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas' }[name] || name);
+  clear(host);
+  host.className = `view view-${name}`;
+  // Cada pantalla se dibuja en su propio contenedor: si el usuario cambia de pantalla antes de que la
+  // anterior termine de cargar, esa quedará desconectada y no se mezclará con la nueva.
+  const view = h('div', { class: 'view-inner' });
+  host.append(view);
   try {
     switch (name) {
       case 'inicio': await renderHome(view); break;
@@ -73,6 +78,8 @@ async function route() {
       case 'doctrinas': await renderDoctrinas(view); break;
       case 'doctrina': await renderDoctrina(view, parts[1]); break;
       case 'hermeneutica': await renderHermeneutica(view); break;
+      case 'bosquejo': await renderBosquejo(view, parts[1]); break;
+      case 'diapositivas': await renderDiapositivas(view, parts[1]); break;
       case 'evaluacion': await renderEvaluacion(view, parts[1]); break;
       case 'ajustes': await renderSettings(view); break;
       default: view.append(h('div', { class: 'empty' }, 'Página no encontrada.'));
@@ -81,7 +88,7 @@ async function route() {
     console.error(e);
     view.append(h('div', { class: 'error-box' }, h('strong', {}, 'No se pudo abrir esta sección. '), e.message || String(e)));
   }
-  if (!parts[2] || !params.get('v')) view.scrollTop = 0;
+  if (!parts[2] || !params.get('v')) host.scrollTop = 0;
 }
 
 async function start() {

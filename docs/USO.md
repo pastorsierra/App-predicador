@@ -39,6 +39,9 @@ Puede limitar la búsqueda a un Testamento o a un libro. También aparecen sus n
 - **Editar o crear:** botón **Editar** o **Nueva**. Use el mismo formato del Taller: `#` título, `## I.` puntos, `>` citas, `**frase de impacto**`, `==resaltado==`.
 - **Series** agrupa sus enseñanzas por serie y **Calendario** muestra las próximas y las ya predicadas.
 
+## Bosquejos y diapositivas
+**Enseñanzas → Bosquejos → Nuevo bosquejo** (elija una plantilla). Escriba el texto base, los puntos, subpuntos, citas y frases; todo se guarda solo. **Crear enseñanza (Word)** la pasa a Mis enseñanzas con su formato, lista para Word o PDF. **Diapositivas** muestra el mensaje para proyectar (toque o deslice para avanzar; **PDF** para guardarlas). Desde un estudio, **Convertir en bosquejo**.
+
 ## Exégesis y Hermenéutica
 - **Exégesis guiada:** en **Estudios**, escriba el pasaje, elija «Exégesis guiada» y toque **Nuevo estudio**. Incluye la comparación del pasaje en todas sus versiones.
 - **Hermenéutica:** **Estudios → Hermenéutica**. Lea los principios, géneros y errores frecuentes, o use **Evaluar una interpretación**: escriba el pasaje y la interpretación, responda las 10 preguntas y vea qué conviene revisar.
