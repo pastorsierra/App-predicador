@@ -10,6 +10,9 @@ import { renderStudies, renderStudy } from './views/studies.js';
 import { renderNotebook } from './views/notebook.js';
 import { renderSettings } from './views/settings.js';
 import { renderAtlas } from './views/atlas.js';
+import { renderBiblioteca, renderDocumento } from './views/biblioteca.js';
+import { renderAsistente } from './views/asistente.js';
+import { getSetting } from './db.js';
 import { renderPersonajes, renderPersonaje, renderCronologia } from './views/personajes.js';
 import { renderDoctrinas, renderDoctrina } from './views/doctrinas.js';
 import { renderHermeneutica, renderEvaluacion } from './views/hermeneutica.js';
@@ -23,19 +26,23 @@ const NAV = [
   ['estudios', 'Estudios', 'study'],
   ['buscar', 'Buscar', 'search'],
   ['cuaderno', 'Cuaderno', 'notebook'],
+  ['biblioteca', 'Biblioteca', 'library'],
+  ['asistente', 'Asistente IA', 'spark'],
   ['personajes', 'Personajes', 'user'],
   ['cronologia', 'Cronología', 'clock'],
   ['atlas', 'Atlas', 'map'],
   ['ajustes', 'Ajustes', 'settings'],
 ];
 
-function buildNav() {
+export async function buildNav() {
+  const aiReady = await getSetting('aiReady', false);
   const nav = document.getElementById('nav');
   const tab = document.getElementById('tabbar');
   clear(nav); clear(tab);
   for (const [id, name, ic] of NAV) {
+    if (id === 'asistente' && !aiReady) continue; // solo aparece cuando la conexión con el servidor funciona
     nav.append(h('li', {}, h('a', { href: `#/${id}`, 'data-route': id }, icon(ic), h('span', {}, name))));
-    if (!['ajustes', 'atlas', 'personajes', 'cronologia'].includes(id)) tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
+    if (!['ajustes', 'atlas', 'personajes', 'cronologia', 'biblioteca', 'asistente'].includes(id)) tab.append(h('a', { href: `#/${id}`, 'data-route': id }, icon(ic, 22), h('span', {}, name)));
   }
   updateOnline();
 }
@@ -59,7 +66,7 @@ async function route() {
   const name = parts[0] || 'inicio';
   const host = document.getElementById('view');
   closePanel();
-  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas', personaje: 'personajes' }[name] || name);
+  markActive({ estudio: 'estudios', doctrinas: 'estudios', doctrina: 'estudios', hermeneutica: 'estudios', evaluacion: 'estudios', ensenanza: 'ensenanzas', archivo: 'ensenanzas', bosquejo: 'ensenanzas', diapositivas: 'ensenanzas', personaje: 'personajes', documento: 'biblioteca' }[name] || name);
   clear(host);
   host.className = `view view-${name}`;
   // Cada pantalla se dibuja en su propio contenedor: si el usuario cambia de pantalla antes de que la
@@ -78,6 +85,9 @@ async function route() {
       case 'ensenanza': if (parts[2] === 'editar') await renderEditor(view, parts[1]); else await renderEnsenanza(view, parts[1]); break;
       case 'archivo': await renderArchivoItem(view, parts[1]); break;
       case 'atlas': await renderAtlas(view, parts[1]); break;
+      case 'biblioteca': await renderBiblioteca(view, params); break;
+      case 'asistente': await renderAsistente(view, params); break;
+      case 'documento': await renderDocumento(view, parts[1], parts[2], params); break;
       case 'personajes': await renderPersonajes(view); break;
       case 'personaje': await renderPersonaje(view, parts[1]); break;
       case 'cronologia': await renderCronologia(view, parts[1]); break;
@@ -107,7 +117,7 @@ async function start() {
     clear(view).append(h('div', { class: 'error-box' }, 'No se pudieron cargar los datos iniciales. ', e.message));
     return;
   }
-  buildNav();
+  await buildNav();
   window.addEventListener('hashchange', route);
   window.addEventListener('online', () => { updateOnline(); toast('Conexión restablecida'); });
   window.addEventListener('offline', () => { updateOnline(); toast('Sin conexión: se usan los textos descargados'); });

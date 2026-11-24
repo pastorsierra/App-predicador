@@ -35,10 +35,10 @@ Requiere: crear proyecto gratuito en Supabase y pegar la URL y la clave pública
 - Doctrinas: biblioteca doctrinal con las categorías iniciales, pasajes principales/complementarios, objeciones y respuestas, desarrollo a lo largo de la Escritura.
 - Estudios temáticos y comparación de pasajes lado a lado.
 
-## Fase 3 — Biblioteca ○
+## Fase 3 — Biblioteca ✔ (v0.9.0; faltan comentarios y diccionarios de dominio público)
 Importar PDF y documentos propios, lector, búsqueda en el texto, etiquetas, notas y resaltado, vínculos con pasajes/doctrinas/estudios. Comentarios y diccionarios de dominio público (por ejemplo, obras clásicas sin derechos) tras verificar cada licencia.
 
-## Fase 4 — Inteligencia artificial ○
+## Fase 4 — Inteligencia artificial ◐ (construida y probada; espera la clave del usuario — ver `IA.md`)
 Requiere: cuenta en la consola de Anthropic y clave de API guardada como secreto en Supabase. Asistente con 8 modos y 4 niveles de profundidad, respuestas basadas en recursos recuperados, citas verificadas contra el texto, control doctrinal según el perfil.
 
 ## Fase 5 — Taller del predicador ✔ (v0.7.0)

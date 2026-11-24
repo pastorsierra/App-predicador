@@ -53,7 +53,7 @@ async function run(name, device) {
   await t('Enseñanzas relacionadas automáticamente', async () => {
     await p.goto(BASE + '#/ensenanza/nueva'); await p.waitForSelector('.md-editor');
     await p.fill('.ens-form input[aria-label="Título"]', 'PRUEBA bautismo'); await p.fill('.md-editor', '# PRUEBA\n\n> Hechos 2:38 — texto');
-    await p.click('.ens-form .btn.primary'); await p.waitForSelector('.ens-page .pg');
+    await p.click('.ens-form .btn.primary'); await p.waitForURL(/#\/ensenanza\/(?!nueva)[^/]+$/); await p.waitForSelector('.ens-page .pg');
     await p.goto(BASE + '#/doctrina/bautismo-agua'); await p.waitForSelector('#sec-ensenanzas .list a strong >> text=PRUEBA bautismo');
     return 'la enseñanza que cita Hechos 2:38 aparece';
   });

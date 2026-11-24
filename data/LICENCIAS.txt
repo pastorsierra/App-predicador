@@ -27,3 +27,8 @@ atlas/   Lugares de OpenBible.info (CC BY 4.0) y mapa de Natural Earth (dominio 
 personajes/ Personas y parentescos de Theographic Bible Metadata, de Robert Rouse (CC BY-SA 4.0).
          https://github.com/robertrouse/theographic-bible-metadata — adaptado: nombres en español
          tomados de la RV1909 y solo los campos de nombre, parentesco y versículos. Se comparte con la misma licencia.
+
+Programas de terceros incluidos
+vendor/pdfjs/  pdf.js 6.2.108 de Mozilla (lector de PDF de la Biblioteca). Licencia Apache 2.0, texto completo en vendor/pdfjs/LICENSE.
+               https://github.com/mozilla/pdf.js
+vendor/docx.js Biblioteca docx (generación de archivos Word), tomada del Taller del Predicador. Licencia MIT.

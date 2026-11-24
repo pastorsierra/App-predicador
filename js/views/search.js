@@ -61,7 +61,7 @@ export async function renderSearch(view, params) {
           h('ul', { class: 'chip-list' }, res.renderings.map(([w, n]) => h('li', {}, h('span', { class: 'chip static' }, `${w} `, h('b', {}, n)))))) : null));
       out.append(byBookBar(res.byBook), results(res.results, res.total));
     } else {
-      const [res, mine] = await Promise.all([searchText(ver0, q0, { scope: scope0, onProgress }), searchUserData(q0)]);
+      const [res, mine, docs] = await Promise.all([searchText(ver0, q0, { scope: scope0, onProgress }), searchUserData(q0), import('../library.js').then(m => m.searchDocs(q0, { limit: 30 })).catch(() => [])]);
       progress.remove();
       if (mine.notes.length || mine.studies.length || mine.sermons.length) {
         out.append(h('section', { class: 'mine' }, h('h2', {}, 'En sus datos'),
@@ -69,6 +69,11 @@ export async function renderSearch(view, params) {
             mine.sermons.slice(0, 30).map(s => h('li', {}, h('a', { href: `#/ensenanza/${encodeURIComponent(s.id)}` }, h('strong', {}, `Enseñanza: ${s.titulo || 'sin título'}`), h('span', {}, s.texto || '')))),
             mine.studies.map(s => h('li', {}, h('a', { href: `#/estudio/${s.id}` }, h('strong', {}, `Estudio: ${s.title}`), h('span', {}, `${s.passageLabel} · ${fmtDate(s.updatedAt)}`)))),
             mine.notes.map(n => h('li', {}, h('a', { href: n.ref ? hrefFor(n.ref) : '#/cuaderno/notas' }, h('strong', {}, `Nota: ${n.title || n.refLabel || 'sin título'}`), h('span', {}, (n.body || '').slice(0, 120))))))));
+      }
+      if (docs.length) {
+        out.append(h('section', { class: 'mine' }, h('h2', {}, 'En su biblioteca'),
+          h('ul', { class: 'list compact' }, docs.slice(0, 10).map(r => h('li', {}, h('a', { href: `#/documento/${r.doc.id}/${r.page}?q=${encodeURIComponent(q0)}` }, h('strong', {}, `${r.doc.title} · pág. ${r.page}`), h('span', { class: 'snip' }, r.snip.pre, h('mark', {}, r.snip.hit), r.snip.post))))),
+          docs.length > 10 ? h('a', { class: 'btn small', href: `#/biblioteca?q=${encodeURIComponent(q0)}` }, `Ver los ${docs.length >= 30 ? 'más de 30' : docs.length} resultados en la biblioteca`) : null));
       }
       out.append(h('h2', { class: 'res-count' }, `${res.total} versículo${res.total === 1 ? '' : 's'} en la ${verLabel(ver0)}`));
       if (!res.total) out.append(h('p', { class: 'hint' }, 'Sin resultados. Pruebe con menos palabras o revise la ortografía (la RV1909 usa formas antiguas como «fué», «á», «crió»; las tildes se ignoran).'));

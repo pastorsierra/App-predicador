@@ -4,7 +4,7 @@ import { BOOK } from '../books.js';
 import { getChapter, plain, segments, strongEntry, loadXref, getVerse, allVersions, verLabel } from '../bible.js';
 import { S } from '../state.js';
 import { label, vkey, ckey, keyFromSelection, selectionLabel, splitAny } from '../ref.js';
-import { put, get, remove, byIndex, all, uid, touchHistory } from '../db.js';
+import { put, get, remove, byIndex, all, uid, touchHistory, getSetting } from '../db.js';
 import { createStudy, addPassageToStudy, listStudies } from '../study.js';
 import { openPanel, setPanelTitle } from './panel.js';
 
@@ -57,6 +57,7 @@ export async function openVersePanel(book, ch, nums, onChange) {
       else { await copyText(payload); toast('Este dispositivo no permite compartir; el texto se copió'); }
     }),
     act('plus', 'Añadir a estudio', () => addToStudyDialog(rangeKey || keys[0])),
+    (await getSetting('aiReady', false)) ? act('spark', 'Preguntar a la IA', () => { location.hash = `#/asistente?ref=${encodeURIComponent(rangeKey || keys[0])}`; }) : null,
   );
 
   const hl = h('div', { class: 'hl-row', role: 'group', 'aria-label': 'Resaltar' },
@@ -161,6 +162,9 @@ async function refsTab(book, ch, sel) {
   }
   if (!n) wrap.append(h('p', { class: 'hint' }, 'No hay referencias cruzadas registradas para esta selección.'));
   wrap.append(h('p', { class: 'hint' }, 'Fuente: OpenBible.info (CC BY), filtradas por votos. Una referencia indica relación temática o verbal; compruebe siempre el contexto de cada pasaje.'));
+  const { docsForVerse } = await import('../library.js');
+  const docs = []; for (const v of sel) for (const x of await docsForVerse(book, ch, v)) if (!docs.some(y => y.doc.id === x.doc.id)) docs.push(x);
+  if (docs.length) wrap.append(h('h3', {}, 'En su biblioteca'), h('ul', { class: 'list compact' }, docs.map(x => h('li', {}, h('a', { href: `#/documento/${x.doc.id}/${x.pages[0]}` }, h('strong', {}, x.doc.title), h('span', {}, `página${x.pages.length > 1 ? 's' : ''} ${x.pages.slice(0, 6).join(', ')}`))))));
   return wrap;
 }
 

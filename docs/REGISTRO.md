@@ -3,8 +3,8 @@
 Documento para continuar el trabajo en cualquier sesión sin perder el hilo.
 
 ## Estado actual
-- **Versión:** 0.8.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica, Taller del predicador propio (bosquejos y diapositivas), Personajes y Cronología.
-- **Pruebas:** 52/52 funcionales, 7/7 de actualización y 20/20 de personajes y cronología (más las suites de cada módulo) correctas; producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
+- **Versión:** 0.9.0 — 23 nov 2026. Enseñanzas del Taller, Mis Biblias, Atlas, conexión automática, versiones PDT y VBL, Doctrinas, Exégesis guiada, Hermenéutica, Taller del predicador propio (bosquejos y diapositivas), Personajes, Cronología, Biblioteca de documentos y Asistente de IA listo para conectar.
+- **Pruebas:** 254 automáticas correctas (52 generales, 7 de actualización, 35 enseñanzas, 29 Biblias y atlas, 6 conexión, 20 doctrinas, 16 exégesis, 18 predicación, 20 personajes, 29 biblioteca, 22 asistente); producción verificada (ver `PRUEBAS.md`). Falta la revisión manual en Safari real.
 - **Publicación:** https://pastorsierra.github.io/App-predicador/ (ver `PUBLICAR.md`).
 
 ## Funciones implementadas (verificadas)
@@ -64,6 +64,17 @@ La app nueva **no debe ser una copia del Taller**: debe seguir el plan original 
 - **Panel del versículo**: nueva pestaña «Personas».
 - **Cronología** (`#/cronologia/ID`): 25 períodos desde los orígenes (sin fecha fiable) hasta Patmos. Cada uno con rango, aclaración del debate (fecha temprana y tardía del éxodo, 586/587, Esdras 458/398, etc.), textos y personas enlazadas; barra temporal proporcional. Redacción propia basada en datos bíblicos y sincronismos aceptados; no se usan las fechas de Ussher de la fuente como si fueran exactas.
 
+## Biblioteca (v0.9.0)
+- **Módulo 7** (`#/biblioteca`, `#/documento/ID/PÁGINA`): añadir varios PDF, .txt o .md a la vez; extracción del texto con pdf.js (Mozilla, Apache 2.0, en `vendor/pdfjs`, guardado sin conexión tras el primer uso); búsqueda sin tildes en todos los documentos o en uno; lector de PDF por páginas o como texto con la palabra resaltada; notas por página; etiquetas y filtro; detección de citas bíblicas (validadas contra la versificación: descarta «Juan 99:1»).
+- Integración: Buscar muestra «En su biblioteca»; el panel del versículo (Referencias) muestra los documentos que lo citan; el asistente de IA puede usar fragmentos.
+- Los archivos y su texto quedan solo en el dispositivo (almacén `docfiles`); el respaldo lleva la ficha, etiquetas y notas, no los archivos.
+
+## Asistente de IA (listo para conectar)
+- Todo construido y probado; falta solo la cuenta de Anthropic y el proyecto de Supabase del usuario. Guía paso a paso: `docs/IA.md`.
+- Función de servidor `supabase/functions/asistente/index.ts`: guarda la clave como secreto, exige `CODIGO_ACCESO`, acepta solo el sitio autorizado, limita el tamaño y los tokens por profundidad, no guarda preguntas ni respuestas; la prueba de conexión no gasta.
+- App: Ajustes → Asistente de IA (dirección + código, solo en el dispositivo, fuera de respaldos). «Asistente IA» en el menú y «Preguntar a la IA» en el panel del versículo aparecen solo cuando la prueba de conexión funciona.
+- Recuperación previa de fuentes reales numeradas (versiones, contexto, referencias, Strong, notas, documentos), 8 modos, 4 profundidades, perfil doctrinal como marco; respuesta marcada como IA con verificación: fuentes inexistentes, citas inexistentes y citas fuera de las fuentes. Guardar en el Cuaderno (etiqueta IA) o copiar.
+
 ## Decisiones técnicas
 | Fecha | Decisión | Motivo |
 |---|---|---|
@@ -82,16 +93,15 @@ Ver tablas en `PRUEBAS.md` (10 registrados).
 ## Pendiente (por fase)
 Ver `ROADMAP.md`. Lo inmediato:
 1. Publicar en GitHub Pages y revisar en Safari real (lista en `PRUEBAS.md`).
-2. Biblioteca de PDF (módulo 7).
-3. Fase 1b: crear proyecto Supabase → autenticación y sincronización; bloqueo con Face ID; planes de lectura.
-4. Fase 4: asistente de IA (requiere clave en un servidor).
+2. Fase 1b: crear proyecto Supabase → autenticación y sincronización; bloqueo con Face ID; planes de lectura.
+3. Activar el asistente de IA cuando el usuario tenga su clave (`docs/IA.md`).
 
 ## Requisitos externos que faltan
 | Para | Qué se necesita del usuario |
 |---|---|
 | Publicar | Autorizar a Claude para crear el repositorio, o usar Working Copy |
 | Sincronización (1b) | Crear cuenta gratuita en supabase.com (Claude guía paso a paso) |
-| IA (Fase 4) | Cuenta en console.anthropic.com con método de pago y límite mensual |
+| IA (Fase 4) | Cuenta en console.anthropic.com con saldo y límite mensual, y proyecto gratuito en Supabase (pasos en `IA.md`) |
 | RVR1960 u otras versiones modernas | Licencia del titular de derechos |
 
 ## Cómo regenerar los datos

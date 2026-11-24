@@ -33,3 +33,6 @@ Cada recurso integrado fue verificado antes de incluirse. El aviso de licencias 
 
 ## Biblias personales
 Las versiones que el usuario carga (por ejemplo, la Reina-Valera 1960) **no forman parte del repositorio**: quedan solo en su dispositivo para uso personal, como en el Taller. Varias tienen derechos de autor y no deben publicarse.
+
+- `vendor/pdfjs/`: pdf.js 6.2.108 (Mozilla), Apache 2.0 — lector y extracción de texto de los PDF de la Biblioteca. Los documentos del usuario se guardan solo en su dispositivo.
+- Asistente de IA: no incluye ninguna clave. La función de servidor (`supabase/functions/asistente`) usa la API de Anthropic con la clave del usuario guardada como secreto en su proyecto de Supabase.

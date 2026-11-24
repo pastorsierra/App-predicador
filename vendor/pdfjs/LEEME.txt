@@ -1,0 +1,1 @@
+pdf.js   "version": "6.2.108", — Mozilla, Apache-2.0. https://github.com/mozilla/pdf.js (compilación legacy, para Safari antiguos)

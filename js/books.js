@@ -83,6 +83,12 @@ for (const b of BOOKS) {
   }
 }
 
+// Solo coincidencias exactas de nombre o abreviatura (para detectar citas dentro de documentos sin falsos positivos)
+export function findBookExact(token) {
+  const t = norm(token).replace(/[\s.]+/g, '').replace(/^(iii|3ra|3a|tercera|tercer)(?=[a-z])/, '3').replace(/^(ii|2da|2a|segunda|segundo)(?=[a-z])/, '2').replace(/^(i|1ra|1a|primera|primer|primero)(?=[a-z])/, (m, off, s) => (/^is/.test(s) ? m : '1'));
+  return ALIAS.get(t) || null;
+}
+
 // Reconoce el libro en un texto ya normalizado sin espacios. Exacto primero; luego prefijo único.
 export function findBook(token) {
   let t = norm(token).replace(/[\s.]+/g, '')

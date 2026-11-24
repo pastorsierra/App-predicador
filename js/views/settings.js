@@ -144,6 +144,40 @@ export async function renderSettings(view) {
     h('p', { class: 'hint' }, 'La clave se guarda solo en este equipo; no va en los respaldos ni en GitHub.'),
     (await hasKey()) ? h('button', { class: 'btn small', onclick: async () => { if (await confirmDialog('Cerrar el archivo', '¿Olvidar la clave en este equipo? Tendrá que escribirla otra vez para abrir el archivo.', 'Olvidar clave')) { await forgetKey(); keyInfo.textContent = 'Clave olvidada en este equipo.'; } } }, 'Olvidar la clave en este equipo') : null));
 
+  // Asistente de IA: conexión con la función de servidor propia (la clave de Anthropic nunca está en la app)
+  const AI = await import('../ai.js');
+  const ac = await AI.aiConfig();
+  const aUrl = h('input', { type: 'url', value: ac.url, placeholder: 'https://xxxx.supabase.co/functions/v1/asistente', 'aria-label': 'Dirección de la función', autocapitalize: 'off', autocomplete: 'off' });
+  const aCode = h('input', { type: 'password', value: ac.code, placeholder: 'Código de acceso (el mismo CODIGO_ACCESO del servidor)', 'aria-label': 'Código de acceso', autocapitalize: 'off', autocomplete: 'off' });
+  const aAnon = h('input', { type: 'text', value: ac.anon, placeholder: 'Clave pública «anon» de Supabase (solo si dejó activada la verificación JWT)', 'aria-label': 'Clave pública de Supabase', autocapitalize: 'off', autocomplete: 'off' });
+  const aMsg = h('p', { class: 'hint', role: 'status' }, ac.ready ? `Conectado. Modelo: ${ac.model || 'el predeterminado del servidor'}.` : 'No conectado.');
+  view.append(h('section', { class: 'settings-block', id: 'ia' }, h('h2', {}, 'Asistente de IA'),
+    h('p', {}, 'El asistente usa Claude (Anthropic) a través de una función de servidor suya en Supabase, donde se guarda la clave de Anthropic. La app nunca guarda esa clave. Cuando la conexión funcione, aparecerá «Asistente IA» en el menú y «Preguntar a la IA» en el panel de cada versículo.'),
+    h('details', {}, h('summary', {}, 'Cómo dejarlo listo (desde el iPad, unos 15 minutos)'),
+      h('ol', { class: 'steps' },
+        h('li', {}, 'En console.anthropic.com cree su cuenta, añada saldo y ponga un límite de gasto mensual (Settings → Limits). Cree una clave en «API Keys».'),
+        h('li', {}, 'En supabase.com cree un proyecto gratuito. Entre a Edge Functions → «Deploy a new function» → «Via Editor», nómbrela asistente y pegue el código de supabase/functions/asistente/index.ts de su repositorio App-predicador.'),
+        h('li', {}, 'En los ajustes de esa función desactive «Verify JWT» (la protege su código de acceso).'),
+        h('li', {}, 'En Edge Functions → Secrets cree: ANTHROPIC_API_KEY (su clave) y CODIGO_ACCESO (una frase larga que usted invente, de 12 letras o más).'),
+        h('li', {}, 'Copie la dirección de la función y escríbala aquí junto con su código de acceso. Pulse «Guardar y probar».')),
+      h('p', { class: 'hint' }, 'La guía completa está en docs/IA.md del repositorio.')),
+    h('div', { class: 'form' }, aUrl, aCode, aAnon),
+    h('div', { class: 'btn-row' },
+      h('button', { class: 'btn primary', onclick: async (e) => {
+        const btn = e.currentTarget; btn.disabled = true; aMsg.textContent = 'Probando la conexión…';
+        try {
+          const cfg = { url: aUrl.value.trim(), code: aCode.value.trim(), anon: aAnon.value.trim() };
+          if (!cfg.url || !cfg.code) throw new Error('Escriba la dirección de la función y el código de acceso.');
+          await AI.saveAiConfig(cfg);
+          const r = await AI.testAi(cfg);
+          aMsg.textContent = `Conectado. Modelo: ${r.modelo}. Ya puede usar el asistente.`;
+          (await import('../main.js')).buildNav();
+        } catch (err) { aMsg.textContent = `No se pudo conectar: ${err.message}`; (await import('../main.js')).buildNav(); }
+        btn.disabled = false;
+      } }, 'Guardar y probar'),
+      ac.url ? h('button', { class: 'btn ghost', onclick: async () => { await AI.forgetAi(); aUrl.value = ''; aCode.value = ''; aAnon.value = ''; aMsg.textContent = 'Conexión quitada de este equipo.'; (await import('../main.js')).buildNav(); } }, 'Quitar de este equipo') : null),
+    aMsg, h('p', { class: 'hint' }, 'La dirección y el código se guardan solo en este equipo; no van en los respaldos ni en GitHub. La prueba no gasta consultas.')));
+
   // Sincronización (estado real)
   view.append(h('section', { class: 'settings-block' }, h('h2', {}, 'Sincronización entre dispositivos'),
     h('p', {}, 'Todavía no está activa. Requiere crear una cuenta gratuita de Supabase (base de datos y autenticación). Los datos ya se guardan con identificadores y fechas preparados para sincronizar sin pérdida. Mientras tanto, use Exportar/Importar respaldo para pasar sus datos entre el iPhone y el iPad.')));
@@ -156,7 +190,8 @@ export async function renderSettings(view) {
       h('li', {}, h('strong', {}, m.xref.name), ` — ${m.xref.license}. ${m.xref.count.toLocaleString('es-CO')} referencias (${m.xref.filter}).`),
       h('li', {}, h('strong', {}, 'Diccionarios de Strong'), ' — hebreo (1894) y griego (1890), dominio público; edición digital de Open Scriptures (CC BY-SA).'),
       h('li', {}, h('strong', {}, 'Atlas'), ' — lugares de OpenBible.info (CC BY 4.0); mapa de Natural Earth (dominio público).'),
-      h('li', {}, h('strong', {}, 'Personajes'), ' — Theographic Bible Metadata, de Robert Rouse (CC BY-SA 4.0); nombres en español tomados de la RV1909.')),
+      h('li', {}, h('strong', {}, 'Personajes'), ' — Theographic Bible Metadata, de Robert Rouse (CC BY-SA 4.0); nombres en español tomados de la RV1909.'),
+      h('li', {}, h('strong', {}, 'Lector de PDF'), ' — pdf.js de Mozilla (Apache 2.0).')),
     h('p', { class: 'hint' }, h('a', { href: 'data/LICENCIAS.txt', target: '_blank', rel: 'noopener' }, 'Texto completo de las licencias'), '. La RVR1960 y otras versiones comerciales no se incluyen porque tienen derechos de autor; solo podrían añadirse con licencia del titular.')));
 
   const ver = h('p', { class: 'version' }, 'Escudriñad');

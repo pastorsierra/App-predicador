@@ -323,3 +323,16 @@ Error corregido:
 | 16 | «Esposa de Simón» aparecía con el nombre «Simón» y como «esposa» de Pedro | Las personas sin nombre propio se traducen en vez de buscarse en el texto |
 | 17 | El patriarca Jacob figuraba como «Israel» y la cronología enlazaba a otro Jacob | Se nombra «Jacob (Israel)» y la cronología usa el número de persona en los homónimos |
 | 18 | «menciónes» con tilde | Corregido a «menciones» |
+
+## Biblioteca (v0.9.0) — 29/29 correctas
+`node tests/biblioteca.mjs URL` con un PDF de prueba creado por `tests/fixtures/hacer-pdf.mjs` (contenido ficticio): biblioteca vacía, añadir PDF y texto, rechazo de archivo falso, búsqueda en todos los documentos, abrir resultado con resaltado, dibujo del PDF con pdf.js, citas detectadas sin falsas, notas por página, ficha y etiquetas, documentos en el panel del versículo, Buscar incluye la biblioteca, respaldo sin archivos, lector sin conexión, eliminar, 0 errores.
+
+## Asistente de IA — 22/22 correctas
+`node tests/asistente.mjs URL`: ejecuta la función de servidor real en Node con un doble de prueba en lugar de Anthropic (no gasta). Ver `IA.md`.
+
+| # | Error | Corrección |
+|---|---|---|
+| 19 | `doc.destroy is not a function` con pdf.js 6 | Se libera la tarea de carga (`loadingTask.destroy()`) |
+| 20 | El aviso «no es un PDF válido» se tapaba con «0 documentos añadidos» | Los errores se muestran en la pantalla y el resumen solo si hubo éxitos |
+| 21 | «En Hch 2:38» no se detectaba (la palabra anterior se tomaba como parte del libro) | Si no hay libro, se prueba con la última palabra |
+| 22 | Prueba de doctrinas inestable: navegaba antes de que terminara de guardarse la enseñanza | La prueba espera la dirección final |
